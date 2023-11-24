@@ -13,11 +13,9 @@ __Table of Contents:__
 6. [Read-based taxonomy](#read-based-taxonomy)
 7. [Assembly QC](#assembly-qc)
 8. [Genome-resolved metagenomics](#genome-resolved-metagenomics)
-9. [MAG QC](#mag-qc)
-10. [Strain engraftment](#strain-engraftment)
-11. [Genome taxonomy](#taxonomic-annotation-of-mags-with-gtdb-tk)
-12. [Genome annotation with Bakta](#genome-annotation-of-mags-with-bakta)
-14. [Visualizing Metaphlan results](#visualizing-metaphlan-results-with-r)
+9. [MAG QC and taxonomy](#mag-qc-and-taxonomy)
+10. [MAG annotation](#mag-annotation)
+11. [Strain engraftment](#strain-engraftment)
 
 ## Introduction
 
@@ -117,7 +115,8 @@ Mini manual for screen:
 
 First we will retrieve all the metagenomic sequence files for the female super donor, DF16. Go to the publication and find the sequencing project repository accession (BioProject accession).  
 Then go to [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) and find all the reads for the project.  Open them in Run selector and find the run accessions of the samples from the super-donor (9 sequencing runs).  
-Finallly download only the accession numbers. We will use that file in the next step to download the data to Puhti.  
+Finallly download only the accession numbers and make a file (`DF16_accessions.txt`) with only the accession, one line per accesion to the data folder in Puhti (`01_DATA/`).  
+We will use that file in the next step to download the data to Puhti.  
 
 We will use [Kingfisher](https://wwood.github.io/kingfisher-download/) to download the read files. It has been installed to Puhti under our course project application folder.  
 But before downloading, have a look at the documentation and find out how to use it with a list of accessions. We will use the `ena-ftp` method for downloading the reads.  
@@ -145,6 +144,13 @@ If not, check which ones are missing and download them individually with `kingfi
 
 ## Quality control
 
+Before running any real analyses, we should do quality control (QC) for the sequencing data.  
+
+We use two widely used programs that are pre-installed in Puhti:
+
+* [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) for running the QC fpor each sequence file.
+* [MultiqC](https://multiqc.info/) to combine the individual reports from FastQC.  
+
 ```bash
 cd /scratch/project_2009008/$USER/MMB-901_Metagenomics
 mkdir 01_DATA/FASTQC
@@ -159,26 +165,49 @@ multiqc --interactive --outdir 01_DATA/FASTQC 01_DATA/FASTQC/
 ```
 
 After running the QC steps, download the MultiQC report (`.html`) file to your local computer and open it with browser.  
+We'll go thru the report together.  
 
 ## Metagenome assembly
 
+As the donor samples are from the same individual, we can do a co-assembly with all the data. For the co-assembly, we'll combine all R1 reads to one file and R2 files to another. 
+
 ```bash
-cd 01_DATA
-cat SRR*_1.fastq.gz > DF16_1.fastq.gz
-cat SRR*_2.fastq.gz > DF16_2.fastq.gz
+cat 01_DATA/SRR*_1.fastq.gz > 01_DATA/DF16_1.fastq.gz
+cat 01_DATA/SRR*_2.fastq.gz > 01_DATA/DF16_2.fastq.gz
 ```
+
+Then the actual assembly will be done with [spoades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we run it as batch job.  
+Have a look at the batch job file. Using [Puhti](https://docs.csc.fi/computing/running/creating-job-scripts-puhti/) and [spades](https://github.com/ablab/spades#sec3.2) manuals, find out which options do we need to define for the SLURM system and to spades.
+
+```bash
+less src/spades.sh
+```
+
+Then when you understand what we are about to do, submit the job with `sbatch`.  
 
 ```bash
 sbatch src/spades.sh
 ```
 
+The assembly will probably queue for a while and run overnight. You can monitor the queue with:
+
+```bash
+squeue -l -u $USER
+```
+
+And when it has started running, look at the output log file in `00_LOGS`.  
+
 ## Read-based taxonomy
+
+
 
 ## Assembly QC
 
 ## Genome-resolved metagenomics
 
-## MAG QC
+## MAG QC and taxonomy
+
+## MAG annotation
 
 ## Strain engraftment
 
