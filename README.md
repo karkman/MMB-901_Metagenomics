@@ -49,7 +49,7 @@ __Practicals:__
 
 ## Target group
 
-This course is targeted to students from master's programme in microbiology and microbial biotechnology (MMB). 
+This course is targeted to students from master's programme in microbiology and microbial biotechnology (MMB).  
 
 ## Learning outcomes
 
@@ -62,5 +62,6 @@ By completing this course, the you will:
 * Have confidence to learn and implement new bioinformatic methods using available documentation
 
 ## Organizers and teachers
+
 :man_technologist: Antti Karkman, University of Helsinki  
-:woman_technologist: Melina Markkanen,  University of Helsinki 
+:woman_technologist: Melina Markkanen,  University of Helsinki  
