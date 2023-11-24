@@ -113,15 +113,17 @@ Mini manual for screen:
 
 ## Data
 
-First we will retrieve all the metagenomic sequence files for the female super donor, DF16. Go to the publication and find the sequencing project repository accession (BioProject accession).  
+First we will retrieve all the metagenomic sequence files for the female super-donor, DF16.  
+Go to the publication and find the sequencing project repository accession (BioProject accession).  
 Then go to [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) and find all the reads for the project.  Open them in Run selector and find the run accessions of the samples from the super-donor (9 sequencing runs).  
+
 Finallly download only the accession numbers and make a file (`DF16_accessions.txt`) with only the accession, one line per accesion to the data folder in Puhti (`01_DATA/`).  
 We will use that file in the next step to download the data to Puhti.  
 
 We will use [Kingfisher](https://wwood.github.io/kingfisher-download/) to download the read files. It has been installed to Puhti under our course project application folder.  
 But before downloading, have a look at the documentation and find out how to use it with a list of accessions. We will use the `ena-ftp` method for downloading the reads.  
 
-Apply for resources. Using a screen session or without. This doesn't take that long, so no real need for screen session.  
+Apply for resources. This doesn't take that long, so no real need for screen session.  
 
 ```bash
 sinteractive -A project_2009008 -m 10G -c 4 
@@ -211,7 +213,7 @@ less src/metaphlan.sh
 
 After that with the help of [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4#basic-usage), figure out the different options we need to define.  
 
-And when you have a basic understanding what we are about to do, submnit the job(s).  
+And when you have a basic understanding what we are about to do, submit the job(s).  
 
 ```bash
 sbatch src/metaphlan.sh
@@ -220,7 +222,8 @@ sbatch src/metaphlan.sh
 And again you can monitor the jobs with the same way as spades batch job.  
 
 Taxonomic profiling doesn't take that long, approx 30 min per sample, but as they run in parallel, it will not take n x 30 min, but a lot less depending on the queue.  
-While you wait, you can log in to Puhti web interface at [www.puhti.csc.fi](http://www.puhti.csc.fi) and open a Rstudio session. We will analyse the results in R using a few packages for microbiome data analysis.  
+While you wait, you can log in to Puhti web interface at [www.puhti.csc.fi](http://www.puhti.csc.fi) and open a Rstudio session (use the default options).  
+We will analyse the results in R using few packages for microbiome data analysis.  
 
 But before we can read in the data to R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
 
@@ -230,10 +233,10 @@ merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
 ```
 
-Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the anlysis in browser interface of Rstudio running at Puhti.  
+Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in browser interface of Rstudio running at Puhti.  
 
 After we have analysed the taxonomic profiles of the donor, we can combine the rest of the samples to our merged metaphlan table and run the analysis again.  
-First copy the taxonomic profiles of additional ~190 samples to the metaphlan output folder and re-run the merge command above.  
+First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
 cp /scratch/project_2009008/Data/metaphlan/*.txt 05_TAXONOMY/
