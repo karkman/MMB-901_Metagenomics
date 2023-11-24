@@ -17,7 +17,7 @@ Many things are possible thanks to the support from [CSC](www.csc.fi).
 
 ## Before the course
 
-Go to [myCSC](www.my.csc.fi) and join the course project (MMB-901_Metagenomics). Link has been sent by email and can be found from Moodle.  
+Go to [myCSC](http://www.my.csc.fi) and join the course project (MMB-901_Metagenomics). Link has been sent by email and can be found from Moodle.  
 
 __Compulsory prerequisites:__
 
