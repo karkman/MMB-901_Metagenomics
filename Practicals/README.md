@@ -143,6 +143,16 @@ After running the QC steps, download the MultiQC report (`.html`) file to your l
 
 ## Metagenome assembly
 
+```bash
+cd 01_DATA
+cat SRR*_1.fastq.gz > DF16_1.fastq.gz
+cat SRR*_2.fastq.gz > DF16_2.fastq.gz
+```
+
+```bash
+sbatch src/spades.sh
+```
+
 ## Read-based taxonomy
 
 ## Assembly QC
