@@ -1,0 +1,5 @@
+.fastq.gz
+*.pptx
+test_data/
+files2023/
+.DS_Store
