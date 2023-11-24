@@ -13,7 +13,7 @@ In metagenomics all genetic material (DNA) in a sample matrix is sequenced and a
 
 During this course the students will learn state-of-the-art bioinformatic approaches to analyse metagenomic data. The course covers both read-based and assembly-based methods, focusing on the strenght of each of these methods depending on the research question. Short-read sequencing technologies are still commonly used in metagenomics, but recent technical advances in long-read sequencing technologies are making long-read sequencing a valid option in metagenomics. Data originating from both short- (e.g. Illumina) and long-read (e.g. Nanopore/PacBio) sequencing platforms will be used in this course to demonstrate their advantages and disadvantages in metagenomics and microbial ecology.
 
-Many things are possible thanks to the support from [CSC](www.csc.fi).
+Many things are possible thanks to the support from [CSC](http://www.csc.fi).
 
 ## Before the course
 
