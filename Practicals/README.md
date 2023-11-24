@@ -4,9 +4,9 @@ __Table of Contents:__
 
 1. [Introduction](#introduction)
 2. [Setup](#setup)
-    2.1 [Connnecting to Puhti](#connecting-to-puhti-with-visual-studio-code)
-    2.2 [Setting up](#setting-up-the-course-folders)
-    2.3. [Interactive use of Puhti](#interactive-use-of-puhti)
+    1. [Connnecting to Puhti](#connecting-to-puhti-with-visual-studio-code)
+    2. [Setting up](#setting-up-the-course-folders)
+    3. [Interactive use of Puhti](#interactive-use-of-puhti)
 3. [Data](#data)
 4. [Quality control](#quality-control)
 5. [Metagenome assembly](#metagenome-assembly)
