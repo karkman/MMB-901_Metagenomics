@@ -15,14 +15,9 @@ __Table of Contents:__
 8. [Genome-resolved metagenomics](#genome-resolved-metagenomics)
 9. [MAG QC](#mag-qc)
 10. [Strain engraftment](#strain-engraftment)
-
 11. [Genome taxonomy](#taxonomic-annotation-of-mags-with-gtdb-tk)
 12. [Genome annotation with Bakta](#genome-annotation-of-mags-with-bakta)
 14. [Visualizing Metaphlan results](#visualizing-metaphlan-results-with-r)
-
-
-
-
 
 ## Introduction
 
@@ -79,8 +74,8 @@ Go to your own folder and clone the course repository there.
 git clone https://github.com/karkman/MMB-901_Metagenomics.git
 ```
 
-Check what was downloaded and go to that folder. Then again check what is inside. 
-**All the scripts are to be run in this folder**.  
+Check what was downloaded and go to that folder. Then again check what is inside.  
+**All the scripts are to be run in this folder** (unless instructed otherwise).  
 
 ### Interactive use of Puhti
 
