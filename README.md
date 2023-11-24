@@ -53,7 +53,7 @@ This course is targeted to students from master's programme in microbiology and 
 
 ## Learning outcomes
 
-By completing this course, the you will:
+By completing this course, you will:
 
 * Have a basic understanding of metagenomic sequencing technologies and bioinformatic approaches to analyse metagenomic data
 * Be able to plan and execute a metagenomic sequencing project depending on the research questions.
