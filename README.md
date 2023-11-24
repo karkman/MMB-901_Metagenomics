@@ -36,14 +36,14 @@ The course will be from Monday 11th of November to Friday 15th of December at Vi
 __Practicals:__
 | Day | Time | Building | Room |  
 | --- | --- | --- | --- |  
-| Mon 27.11.    | 10.15-15.45   | :school: B-building | __341__   |
-| Wed 29.11.  | 10.15-15.45   | :office: Info | __K1086__  |
-| Fri 1.12.| 10.15-15.45   | :office: Info | __K1086__  |
-| Mon 4.12.  | 10.15-15.45   | :school: B-building | __341__  |
-| Fri 8.12.   | 10.15-15.45   | :office: Info| __K1086__  |
-| Mon 11.12.   | 10.15-15.45   | :school: B-building | __341__  |
-| Wed 13.12.   | 10.15-15.45   | :office: Info | __K1086__  |
-| Fri 15.12.   | 10.15-15.45   | :office: Info | __K1086'__  |
+| Monday 27.11.    | 10.15-15.45   | :school: B-building | __341__   |
+| Wednesday 29.11.  | 10.15-15.45   | :office: Info | __K1086__  |
+| Friday 1.12.| 10.15-15.45   | :office: Info | __K1086__  |
+| Monday 4.12.  | 10.15-15.45   | :school: B-building | __341__  |
+| Friday 8.12.   | 10.15-15.45   | :office: Info| __K1086__  |
+| Monday 11.12.   | 10.15-15.45   | :school: B-building | __341__  |
+| Wednesday 13.12.   | 10.15-15.45   | :office: Info | __K1086__  |
+| Friday 15.12.   | 10.15-15.45   | :office: Info | __K1086'__  |
 
 [__-- Link to PRACTICALS --__](Practicals/README.md)
 
