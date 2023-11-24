@@ -28,17 +28,17 @@ Using read-based and assembly-based approaches, we will study the human gut micr
 ### Connecting to Puhti with Visual Studio Code
 
 * Launch Visual Studio Code
-* Down left corner you will have a (green) button with "><" (hoover over it and it says "Open a Remote Window"), click it 
+* Down left corner you will have a (green) button with "><" (hoover over it and it says "Open a Remote Window"), click it  
 * Choose "Connect Current Window to Host..."
-* Type in the **user<span>@puhti.csc.fi** and hit "Enter" (change "user" for your own CSC username) 
+* Type in the __YOUR_USERNAME@puhti.csc.fi__ and hit "Enter" (change "user" for your own CSC username)  
 * Type your password and hit "Enter"
-* In the following dialogue, type **yes** and hit "Enter"
+* In the following dialogue, type __yes__ and hit "Enter"
 
 When the down left corner says `SSH:puhti.csc.fi`, you're connected.
 
 * From the menu select `Terminal > New Terminal` and you should see a new panel. This is the __command line__.
 
-* When you need to logout just type **exit** in the terminal/command line and hit "Enter"  
+* When you need to logout just type __exit__ in the terminal/command line and hit "Enter"  
 (or you can click the down left corner and choose "Close Remote Connection")
 
 ### Setting up the course folders
@@ -49,7 +49,7 @@ Some of the tools needed on this course can be found from the course project app
 
 First list all projects you're affiliated with in CSC.
 
-```
+```bash
 csc-workspaces
 ```
 
@@ -66,7 +66,7 @@ Check with `ls`; which folder did `mkdir $USER` create?
 This directory (`/scratch/project_2009008/your-user-name`) is your own working directory.  
 Every time you log into Puhti, you should use `cd` to navigate to this directory.
 
-Go to your own folder and clone the course repository there. 
+Go to your own folder and clone the course repository there.  
 
 ```bash
 git clone https://github.com/karkman/MMB-901_Metagenomics.git
@@ -94,7 +94,7 @@ You always need to specify the accounting project (`-A`, `--account`). Otherwise
 | -d, --tmp     | $TMPDIR size (in GiB)      |  32     | 760  |  
 | -g, --gpu     | Number of GPUs       | 0     | 0 |  
 
-[**Read more about interactive use of Puhti.**](https://docs.csc.fi/computing/running/interactive-usage/#sinteractive-in-puhti)  
+[__Read more about interactive use of Puhti.__](https://docs.csc.fi/computing/running/interactive-usage/#sinteractive-in-puhti)  
 
 Screen is a handy way to run things in the background without losing them when you logout or have connection problems. However, you have to be careful whn using screen, you can easily get lost.  
 And to make things even more complicated, the screen sessions are specific to each login node. And Puhti has at least 4 login nodes.  
@@ -169,7 +169,7 @@ We'll go thru the report together.
 
 ## Metagenome assembly
 
-As the donor samples are from the same individual, we can do a co-assembly with all the data. For the co-assembly, we'll combine all R1 reads to one file and R2 files to another. 
+As the donor samples are from the same individual, we can do a co-assembly with all the data. For the co-assembly, we'll combine all R1 reads to one file and R2 files to another.  
 
 ```bash
 cat 01_DATA/SRR*_1.fastq.gz > 01_DATA/DF16_1.fastq.gz
@@ -199,7 +199,50 @@ And when it has started running, look at the output log file in `00_LOGS`.
 
 ## Read-based taxonomy
 
+While we wait for the assembly to finish, we can run the read-based taxonomic annotation for the donor samples. And later combine some ready-made output files to compare the recipients to the donor.  
+We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic copmposition in metagenomic data.  
 
+To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, each job will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
+Have a look at the array job file and find out how array jobs are defined by comparing it to the spades batch job we ran earlier.  
+
+```bash
+less src/metaphlan.sh
+```
+
+After that with the help of [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4#basic-usage), figure out the different options we need to define.  
+
+And when you have a basic understanding what we are about to do, submnit the job(s).  
+
+```bash
+sbatch src/metaphlan.sh
+```
+
+And again you can monitor the jobs with the same way as spades batch job.  
+
+Taxonomic profiling doesn't take that long, approx 30 min per sample, but as they run in parallel, it will not take n x 30 min, but a lot less depending on the queue.  
+While you wait, you can log in to Puhti web interface at [www.puhti.csc.fi](http://www.puhti.csc.fi) and open a Rstudio session. We will analyse the results in R using a few packages for microbiome data analysis.  
+
+But before we can read in the data to R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
+
+```bash
+module load metaphlan/4.0.6
+merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
+awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
+```
+
+Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the anlysis in browser interface of Rstudio running at Puhti.  
+
+After we have analysed the taxonomic profiles of the donor, we can combine the rest of the samples to our merged metaphlan table and run the analysis again.  
+First copy the taxonomic profiles of additional ~190 samples to the metaphlan output folder and re-run the merge command above.  
+
+```bash
+cp /scratch/project_2009008/Data/metaphlan/*.txt 05_TAXONOMY/
+
+merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
+awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
+```
+
+Then re-run the R part.  
 
 ## Assembly QC
 
@@ -210,4 +253,3 @@ And when it has started running, look at the output log file in `00_LOGS`.
 ## MAG annotation
 
 ## Strain engraftment
-
