@@ -1,5 +1,29 @@
 # MMB-901 Microbial metagenomics – Practicals
 
+__Table of Contents:__
+
+1. [Introduction](#introduction)
+2. [Setup](#setup)
+    2.1 [Connnecting to Puhti](#connecting-to-puhti-with-visual-studio-code)
+    2.2 [Setting up](#setting-up-the-course-folders)
+    2.3. [Interactive use of Puhti](#interactive-use-of-puhti)
+3. [Data](#data)
+4. [Quality control](#quality-control)
+5. [Metagenome assembly](#metagenome-assembly)
+6. [Read-based taxonomy](#read-based-taxonomy)
+7. [Assembly QC](#assembly-qc)
+8. [Genome-resolved metagenomics](#genome-resolved-metagenomics)
+9. [MAG QC](#mag-qc)
+10. [Strain engraftment](#strain-engraftment)
+
+11. [Genome taxonomy](#taxonomic-annotation-of-mags-with-gtdb-tk)
+12. [Genome annotation with Bakta](#genome-annotation-of-mags-with-bakta)
+14. [Visualizing Metaphlan results](#visualizing-metaphlan-results-with-r)
+
+
+
+
+
 ## Introduction
 
 On this course we will use a subset from a publicly available human gut metagenomic sequencing data from fecal microbiota transplantation (FMT) study: [Wilson, B.C., Vatanen, T., Jayasinghe, T.N. _et al._ Strain engraftment competition and functional augmentation in a multi-donor fecal microbiota transplantation trial for obesity. Microbiome 9, 107 (2021)](https://doi.org/10.1186/s40168-021-01060-7).  
@@ -24,7 +48,7 @@ When the down left corner says `SSH:puhti.csc.fi`, you're connected.
 * When you need to logout just type **exit** in the terminal/command line and hit "Enter"  
 (or you can click the down left corner and choose "Close Remote Connection")
 
-## Setting up the course folders
+### Setting up the course folders
 
 The main course directory is located at `/scratch/project_2009008`.  
 There you will set up your own directory where you will perform all the tasks for this course.  
@@ -58,7 +82,7 @@ git clone https://github.com/karkman/MMB-901_Metagenomics.git
 Check what was downloaded and go to that folder. Then again check what is inside. 
 **All the scripts are to be run in this folder**.  
 
-## Interactive use of Puhti
+### Interactive use of Puhti
 
 Puhti uses a scheduling system called SLURM. Most jobs are sent to the queue, but smaller jobs can be run interactively.
 
