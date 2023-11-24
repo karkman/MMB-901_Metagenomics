@@ -28,7 +28,7 @@ TAX <- TAX %>% mutate(rowname=paste0("tax", seq(1:nrow(TAX)))) %>% column_to_row
 ## And finally convert them to phyloseq object
 DF16_ps <- phyloseq(otu_table(OTU, taxa_are_rows=TRUE), tax_table(as.matrix(TAX)))
 
-## As a last step we read in a table having some metadata for each of the samples and attach it t our hyloseq object
+## As a last step we read in a table having some metadata for each of the samples and attach it to our phyloseq object
 metadata <- read.table("doc/metadata.txt", row.names = 1, header=TRUE)
 sample_data(DF16_ps) <- sample_data(metadata)
 
