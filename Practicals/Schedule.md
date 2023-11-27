@@ -2,7 +2,7 @@
 
 ## Monday 27.11.2023  
 
-| Time | Description|
+| Time | Description |
 | --- | --- |
 | 10-11 | Introduction - [Slides](../Lectures/01_introduction.pdf) |
 | 11-12 | Setup – [Instructions](README.md#setup) |
