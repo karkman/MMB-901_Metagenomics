@@ -253,6 +253,12 @@ Then re-run the R part.
 
 ## MAG QC and taxonomy
 
+```bash
+export GTDBTK_DATA_PATH="/scratch/project_2009008/DB/release214/"
+```
+
 ## MAG annotation
 
 ## Strain engraftment
+
+## Automatic binning
