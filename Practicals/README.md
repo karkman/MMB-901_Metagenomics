@@ -134,7 +134,7 @@ Download the data to the data folder.
 ```bash
 cd 01_DATA
 
-~/projappl/project_2009008/Kingfisher/bin/kingfisher get \
+/projappl/project_2009008/Kingfisher/bin/kingfisher get \
     ## fill in the needed options to download the read files
     -m ena-ftp \
     --download-threads $SLURM_CPUS_PER_TASK \
