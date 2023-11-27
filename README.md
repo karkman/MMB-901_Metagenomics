@@ -45,6 +45,7 @@ __Practicals:__
 | Wednesday 13.12.   | 10.15-15.45   | :office: Info | __K1086__  |
 | Friday 15.12.   | 10.15-15.45   | :office: Info | __K1086'__  |
 
+[__-- Detailed SCHEDULE --__](Practicals/Schedule.md)  
 [__-- Link to PRACTICALS --__](Practicals/README.md)
 
 ## Target group
