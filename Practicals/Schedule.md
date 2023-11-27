@@ -3,7 +3,7 @@
 ## Monday 27.11.2023  
 
 | Time | Topic |
-| ---- | ----- |
+| --- | --- |
 | 10-11 | [Introduction](../Lectures/01_introduction.pdf) |
 | 11-12 | [Setup](README.md#setup) |
 | 12-13 | Lunch |
