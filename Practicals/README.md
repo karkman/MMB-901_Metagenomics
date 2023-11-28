@@ -178,7 +178,7 @@ cat 01_DATA/SRR*_1.fastq.gz > 01_DATA/DF16_1.fastq.gz
 cat 01_DATA/SRR*_2.fastq.gz > 01_DATA/DF16_2.fastq.gz
 ```
 
-Then the actual assembly will be done with [spoades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we run it as batch job.  
+Then the actual assembly will be done with [spades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we'll run it as batch job.  
 Have a look at the batch job file. Using [Puhti](https://docs.csc.fi/computing/running/creating-job-scripts-puhti/) and [spades](https://github.com/ablab/spades#sec3.2) manuals, find out which options do we need to define for the SLURM system and to spades.
 
 ```bash
@@ -202,9 +202,9 @@ And when it has started running, look at the output log file in `00_LOGS`.
 ## Read-based taxonomy
 
 While we wait for the assembly to finish, we can run the read-based taxonomic annotation for the donor samples. And later combine some ready-made output files to compare the recipients to the donor.  
-We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic copmposition in metagenomic data.  
+We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic compposition in metagenomic data.  
 
-To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, each job will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
+To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
 Have a look at the array job file and find out how array jobs are defined by comparing it to the spades batch job we ran earlier.  
 
 ```bash
@@ -225,7 +225,8 @@ Taxonomic profiling doesn't take that long, approx 30 min per sample, but as the
 While you wait, you can log in to Puhti web interface at [www.puhti.csc.fi](http://www.puhti.csc.fi) and open a Rstudio session (use the default options).  
 We will analyse the results in R using few packages for microbiome data analysis.  
 
-But before we can read in the data to R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
+When all the metaphlan jobs are finished, we can go on with the data analysis of the microbial community.  
+But before we can read the data into R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
 
 ```bash
 module load metaphlan/4.0.6
@@ -249,7 +250,36 @@ Then re-run the R part.
 
 ## Assembly QC
 
+Although it is not straightforward to assess the quality of a metagenomic assembly, we can still run a QC ananlysis and at least see what we got.  
+We will use the metagenomic version of [QUAST](https://quast.sourceforge.net/docs/manual.html) for the job.  
+
+QUAST can be found from Puhti, so just need to load the quast module.  
+But first allocate some resources. Using the instructions from the first day, allocate 5000 Mb of memory, 4 cores and 2 hours. And remember to add the project with `-A`.  
+
+```bash
+# sinteractive 
+```
+
+Then when you're connected to a computing node, run quast on the assembly.
+
+```bash
+module load quast/5.2.0 
+metaquast.py 02_ASSEMBLY/contigs.fasta --max-ref-num 0 --threads $SLURM_CPUS_PER_TASK -o 02_ASSEMBLY/QUAST --fast
+```
+
+When the job is finished, have a look at the output folder and inspect the results. QUAST manual will help you with the different output files.  
+
 ## Genome-resolved metagenomics
+
+### Contigs database
+
+### Annotation of contigs database
+
+### Mapping and profiling
+
+### Merging the profiles
+
+### Interactive use and binning
 
 ## MAG QC and taxonomy
 
