@@ -254,13 +254,14 @@ Although it is not straightforward to assess the quality of a metagenomic assemb
 We will use the metagenomic version of [QUAST](https://quast.sourceforge.net/docs/manual.html) for the job.  
 
 QUAST can be found from Puhti, so just need to load the quast module.  
-But first allocate some resources. Using the instructions from the first day, allocate 5000 Mb of memory, 4 cores and 2 hours. And remember to add the project with `-A`.  
+But first allocate some resources. Using the instructions from the first day, allocate 5000 Mb of memory, 4 cores and 2 hours. And remember to add the project with `-A` or `--account`.  
 
 ```bash
 # sinteractive 
 ```
 
-Then when you're connected to a computing node, run quast on the assembly.
+While you wait for the resources, have a look at the quast manual and read about the options were using.  
+Then when you're connected to a computing node and have read about the options from the manual, run quast.
 
 ```bash
 module load quast/5.2.0 
