@@ -274,6 +274,15 @@ When the job is finished, have a look at the output folder and inspect the resul
 
 ### Contigs database
 
+```bash
+# 40G, 6 cpus, 100G tmp
+module load anvio/7.1
+anvi-script-reformat-fasta 02_ASSEMBLY/contigs.fasta --min-len 2500 -o 03_ANVIO/contigs2500.fasta # ~1 min
+anvi-gen-contigs-database -f 03_ANVIO/contigs2500.fasta -T 6 -o 03_ANVIO/CONTIGS.db # ~30 min
+anvi-run-hmms -c 03_ANVIO/CONTIGS.db # ~20 min
+anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T 6 # ~5 min
+```
+
 ### Annotation of contigs database
 
 ### Mapping and profiling
