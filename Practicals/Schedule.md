@@ -23,7 +23,10 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 12-13 | Lunch break :plate_with_cutlery: |
+| 10-11 | Assembly QC and genome-resolved metagenomics| [Slides](../lectures/03_assembly_qc-and-genome-resoved_metagenomics.pdf) |
+| 11-12 | Assembly QC | [Instructions](README.md#assembly-qc) |
+| 12-13 | Lunch break :plate_with_cutlery: | |
+| 13-16 | Setting up anvi'o files | [Instructions](README.md#genome-resolved-metagenomics) |
 
 ## Monday 4.12.2023
 
