@@ -32,28 +32,28 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 12-13 | Lunch break :plate_with_cutlery: |
+| 12-13 | Lunch break | :plate_with_cutlery: |
 
 ## Friday 8.12.2023
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 12-13 | Lunch break :plate_with_cutlery: |
+| 12-13 | Lunch break | :plate_with_cutlery: |
 
 ## Monday 11.12.2023
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 12-13 | Lunch break :plate_with_cutlery: |
+| 12-13 | Lunch break | :plate_with_cutlery: |
 
 ## Wednesday 13.12.2023
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 12-13 | Lunch break :plate_with_cutlery: |
+| 12-13 | Lunch break | :plate_with_cutlery: |
 
 ## Friday 15.12.2023
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 12-13 | Lunch break :plate_with_cutlery: |
+| 12-13 | Lunch break | :plate_with_cutlery: |
