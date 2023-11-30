@@ -254,10 +254,10 @@ Although it is not straightforward to assess the quality of a metagenomic assemb
 We will use the metagenomic version of [QUAST](https://quast.sourceforge.net/docs/manual.html) for the job.  
 
 QUAST can be found from Puhti, so just need to load the quast module.  
-But first allocate some resources. Using the instructions from the first day, allocate 5000 Mb of memory, 4 cores and 2 hours. And remember to add the project with `-A` or `--account`.  
+But first allocate some resources.  
 
 ```bash
-# sinteractive 
+sinteractive --account project_2009008
 ```
 
 While you wait for the resources, have a look at the quast manual and read about the options were using.  
@@ -268,28 +268,130 @@ module load quast/5.2.0
 metaquast.py 02_ASSEMBLY/contigs.fasta --max-ref-num 0 --threads $SLURM_CPUS_PER_TASK -o 02_ASSEMBLY/QUAST --fast
 ```
 
-When the job is finished, have a look at the output folder and inspect the results. QUAST manual will help you with the different output files.  
+When the job is finished, free the resources with:  
+
+```bash
+exit
+```
+
+And have a look at the output folder and inspect the results. QUAST manual will help you with the different output files.  
 
 ## Genome-resolved metagenomics
 
-### Contigs database
+We will use [anvi'o](http://www.anvio.org) for genome-resolved metagenomics. Anvi'o is a multi-omics analysis and visualization software. The website has multiple tutorials and comprehensive manual on how to use it with different data sets and for various analyses. We will cover only a small part of it.  
+There's also a [´omics vocabulary](https://anvio.org/vocabulary/), that can help you to understand some key terms and concepts in microbial 'omics.  
+
+Allocate computing resources. We'll need 40G of memory, 6 CPUs and 100G of temporary storage for at least 4 hours.  
 
 ```bash
-# 40G, 6 cpus, 100G tmp
+# sinteractive
+```
+
+### Contigs database
+
+The first task is to create the contigs database from our assembled contigs. To make things run a bit smoother, we'll first remove all contigs < 2500nt.  
+During the contigs database creation, anvi'o does gene calling with prodigal, calculates the tetranucleotide frequencies for each contigs and splits longer contigs into ~20 000 nt chunks called splits.  
+
+```bash
 module load anvio/7.1
-anvi-script-reformat-fasta 02_ASSEMBLY/contigs.fasta --min-len 2500 -o 03_ANVIO/contigs2500.fasta # ~1 min
-anvi-gen-contigs-database -f 03_ANVIO/contigs2500.fasta -T 6 -o 03_ANVIO/CONTIGS.db # ~30 min
-anvi-run-hmms -c 03_ANVIO/CONTIGS.db # ~20 min
-anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T 6 # ~5 min
+anvi-script-reformat-fasta 02_ASSEMBLY/contigs.fasta --min-len 2500 -o 03_ANVIO/contigs2500.fasta
+anvi-gen-contigs-database -f 03_ANVIO/contigs2500.fasta -T 6 -o 03_ANVIO/CONTIGS.db
 ```
 
 ### Annotation of contigs database
 
+After the contigs database has been created, we'll add only few annotations to the database that aid in the binning process. There are many other commands to add other annotations to the database.  
+`anvi-run-hmms` annotates single-copy core genes and ribosomal RNA's that are used to estimate the completeness and contamination of a bin.  
+`anvi-run-scg-taxonomy` annotates single-copy core genes with taxonomic information.  
+
+```bash
+anvi-run-hmms -c 03_ANVIO/CONTIGS.db # ~20 min
+anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T 6 # ~5 min
+```
+
 ### Mapping and profiling
+
+To obtain the differential coverage information for each contig in our database, we will map the original reads from each sample individually to the formatted fasta file (contigs < 2500 nt removed) and make a single profile database from each formatted mappign output file.  
+We used [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for the mapping and the first step is to create an index of the fasta file.  
+
+```bash
+ bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs
+```
+
+As we will be running the same job for all nine samples, the quickest way is to create an array job for the task.  
+Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `src` folder and modify it accordingly:
+
+* Change the name of the job and the names of the log files
+* Change the time to 1 hour
+* Change the memory to 10G
+* Instead of metaphlan, load `anvio/7.1` module
+
+**Do not run** the following, but these are the mapping and profiling commands that you need to change in the file:  
+
+```bash
+bowtie2 \
+    -x 04_MAPPING/contigs \
+    -1 01_DATA/${SAMPLE_ACC}_1.fastq.gz \
+    -2 01_DATA/${SAMPLE_ACC}_2.fastq.gz \
+    --no-unal \
+    -p $SLURM_CPUS_PER_TASK \
+    -S $LOCAL_SCRATCH/${SAMPLE_ACC}.sam
+
+samtools view -bS $LOCAL_SCRATCH/${SAMPLE_ACC}.sam > $LOCAL_SCRATCH/${SAMPLE_ACC}.bam
+
+anvi-init-bam $LOCAL_SCRATCH/${SAMPLE_ACC}.bam -T $SLURM_CPUS_PER_TASK -o 04_MAPPING/${SAMPLE_ACC}.bam
+
+anvi-profile \
+    -i 04_MAPPING/${SAMPLE_ACC}.bam \
+    -c 03_ANVIO/CONTIGS.db \
+    --output-dir 04_MAPPING/${SAMPLE_ACC} \
+    -S ${SAMPLE_ACC} \
+    -T $SLURM_CPUS_PER_TASK \
+    --min-contig-length 5000
+```
 
 ### Merging the profiles
 
+After all the mapping jobs have been finished, we can merge all the single profiles into a merged profile database.  
+
+```bash
+ anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering # ~40G, 5 min 
+ ```
+
 ### Interactive use and binning
+
+Now we should have all that we need to visualize our metagenome in anvi'o and start binning. This part is easiest to do with VS Code, but other options are also possible. Except not in Puhti web interface (as far as I know).  
+To be able to tunnel the interactive interface from Puhti to your own computer, everyone will need a different port.  
+We will allocate the ports in class.  
+
+When you know your port number (`XXXX`), assign it to the environemntal variable `$ANVIO_PORT`.  
+
+```bash
+ANVIO_PORT=XXXX
+```
+
+Then we need to set up the ports and we'll go this thru together.  
+After the port has been set, you can run the `anvi-interactive` to launch the interactive interface.  
+
+```bash
+anvi-interactive -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT
+```
+
+Other usefull command we will need to during binnning.  
+
+```bash
+anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P 8120 -C PreCluster -b Bin_1
+
+anvi-rename-bins {
+    -c 03_ANVIO/CONTIGS.db \
+    -p 04_MAPPING/MERGED/PROFILE.db \
+    --collection-to-read PreCluster \
+    --collection-to-write Bins \
+    --prefix DF16_Bins \
+    --report-file 03_ANVIO/Bins_report.txt
+
+ anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
+ ```
 
 ## MAG QC and taxonomy
 
