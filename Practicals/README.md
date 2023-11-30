@@ -386,7 +386,7 @@ anvi-interactive -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVI
 Other usefull command we will need to during binnning.  
 
 ```bash
-anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P 8120 -C PreCluster -b Bin_1
+anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT -C PreCluster -b Bin_1
 
 anvi-rename-bins \
     -c 03_ANVIO/CONTIGS.db \
