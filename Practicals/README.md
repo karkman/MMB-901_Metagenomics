@@ -305,8 +305,8 @@ After the contigs database has been created, we'll add only few annotations to t
 `anvi-run-scg-taxonomy` annotates single-copy core genes with taxonomic information.  
 
 ```bash
-anvi-run-hmms -c 03_ANVIO/CONTIGS.db # ~20 min
-anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T 6 # ~5 min
+anvi-run-hmms -c 03_ANVIO/CONTIGS.db 
+anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T 6 
 ```
 
 ### Mapping and profiling
@@ -358,10 +358,10 @@ sbatch src/mapping.sh
 
 ### Merging the profiles
 
-After all the mapping jobs have been finished, we can merge all the single profiles into a merged profile database.  
+When all the mapping jobs have been finished, we can merge all the single profiles into a merged profile database.  
 
 ```bash
- anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering # ~40G, 5 min 
+ anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering
  ```
 
 ### Interactive use and binning
@@ -388,7 +388,7 @@ Other usefull command we will need to during binnning.
 ```bash
 anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P 8120 -C PreCluster -b Bin_1
 
-anvi-rename-bins {
+anvi-rename-bins \
     -c 03_ANVIO/CONTIGS.db \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --collection-to-read PreCluster \
