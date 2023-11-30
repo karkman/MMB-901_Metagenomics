@@ -350,6 +350,12 @@ anvi-profile \
     --min-contig-length 5000
 ```
 
+After the file is ready, submit the jobs to the queue.  
+
+```bash
+sbatch src/mapping.sh
+```
+
 ### Merging the profiles
 
 After all the mapping jobs have been finished, we can merge all the single profiles into a merged profile database.  
