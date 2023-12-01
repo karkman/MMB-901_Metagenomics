@@ -323,7 +323,7 @@ Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `sr
 
 * Change the name of the job and the names of the log files
 * Change the time to 1 hour
-* Change the memory to 10G
+* Change the memory to 12G
 * Instead of metaphlan, load `anvio/7.1` module
 
 **Do not run** the following, but these are the mapping and profiling commands that you need to change in the file:  
