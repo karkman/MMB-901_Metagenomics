@@ -305,8 +305,8 @@ After the contigs database has been created, we'll add only few annotations to t
 `anvi-run-scg-taxonomy` annotates single-copy core genes with taxonomic information.  
 
 ```bash
-anvi-run-hmms -c 03_ANVIO/CONTIGS.db 
-anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T 6 
+anvi-run-hmms -c 03_ANVIO/CONTIGS.db -T $SLURM_CPUS_PER_TASK
+anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T $SLURM_CPUS_PER_TASK
 ```
 
 ### Mapping and profiling
