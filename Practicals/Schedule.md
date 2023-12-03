@@ -23,7 +23,7 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 10-11 | Assembly QC and genome-resolved metagenomics| [Slides](../lectures/03_assembly_qc-and-genome-resoved_metagenomics.pdf) |
+| 10-11 | Assembly QC and genome-resolved metagenomics | [Slides](../lectures/03_assembly_qc-and-genome-resoved_metagenomics.pdf) |
 | 11-12 | Assembly QC | [Instructions](README.md#assembly-qc) |
 | 12-13 | Lunch break  | :plate_with_cutlery: |
 | 13-15 | Setting up anvi'o files | [Instructions](README.md#genome-resolved-metagenomics) |
@@ -33,7 +33,10 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
+| 10-11 | Recap from Friday | [Slides](../lectures/04_Fri_recap.pdf) |
+| 11-12 | Manual binnning | [Instructions](README.md#interactive-use-and-binning) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
+| 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
 ## Friday 8.12.2023
 

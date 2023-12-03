@@ -359,6 +359,7 @@ sbatch src/mapping.sh
 ### Merging the profiles
 
 When all the mapping jobs have been finished, we can merge all the single profiles into a merged profile database.  
+For this task you will need 40G of memory and about 30 min.  
 
 ```bash
  anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering
@@ -367,7 +368,7 @@ When all the mapping jobs have been finished, we can merge all the single profil
 ### Interactive use and binning
 
 Now we should have all that we need to visualize our metagenome in anvi'o and start binning. This part is easiest to do with VS Code, but other options are also possible. Except not in Puhti web interface (as far as I know).  
-To be able to tunnel the interactive interface from Puhti to your own computer, everyone will need a different port.  
+To be able to tunnel the interactive interface from Puhti to your own computer, everyone will need a separate port.  
 We will allocate the ports in class.  
 
 When you know your port number (`XXXX`), assign it to the environemntal variable `$ANVIO_PORT`.  
@@ -376,14 +377,16 @@ When you know your port number (`XXXX`), assign it to the environemntal variable
 ANVIO_PORT=XXXX
 ```
 
-Then we need to set up the ports and we'll go this thru together.  
+For the interactive work you will need around 10G of memory and only 1 CPU.  
+
+Then we need to set up the ports in VS Code. We'll go this thru together.  
 After the port has been set, you can run the `anvi-interactive` to launch the interactive interface.  
 
 ```bash
 anvi-interactive -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT
 ```
 
-Other usefull command we will need to during binnning.  
+Other usefull command we will need during binnning.  
 
 ```bash
 anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT -C PreCluster -b Bin_1
