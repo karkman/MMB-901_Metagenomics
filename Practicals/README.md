@@ -404,12 +404,119 @@ anvi-rename-bins \
 
 ## MAG QC and taxonomy
 
+When the binning is done, it's time to assess the quality of them and give a taxonomic annotation to each bin.  
+We will use CheckM2 for assessing the quality of our MAGs and GTDB-Tk for the taxonomic annotation.  
+
+But since there are probably a lot of low quality bins (low completeness), let's run `anvi-rename-bins` and `anvi-summarize` once more and ask anvi'o to mark all bins it thinks are good quality. This way we can reduce the amount of bins we need to analyse and everything will be a bit faster. We will use a strict cut-off for the completion to reduce the number even more.  
+
+Allocate resources for the job. You will need the default resource for 30 min.  
+
+```bash
+sinteractive -A project_2009008 -t 00:30:00
+```
+
+```bash
+anvi-rename-bins \
+    -c 03_ANVIO/CONTIGS.db \
+    -p 04_MAPPING/MERGED/PROFILE.db \
+    --collection-to-read \ # The latest collection you have goes here, before the "\"
+    --collection-to-write MAGs \
+    --call-MAGs \
+    --min-completion-for-MAG 90 \
+    --max-redundancy-for-MAG 10 \
+    --prefix DF16 \
+    --report-file 03_ANVIO/MAG_report.txt
+
+anvi-summarize \
+    -c 03_ANVIO/CONTIGS.db \
+    -p 04_MAPPING/MERGED/PROFILE.db \
+    -o 03_ANVIO/SUMMARY_MAGs \
+    -C MAGs
+```
+
+### MAG folder
+
+Now each bin that had completeness and redundancy (according to anvi'o) over 70 % and under 10 %, respectively, will have "MAG" in its name. For example `DF16_MAG_00001`. So we can only pick those for further analyses. We will make a folder with softlinks to all of our MAGs and then analyze only these with CheckM2 and GTDB-Tk.  
+
+```bash
+mkdir 06_GENOMES
+cd 06_GENOMES
+ln -s ../03_ANVIO/SUMMARY_MAGs/bin_by_bin/*MAG*/*MAG*-contigs.fa ./
+cd ..
+```
+
+The MAG quality control and taxonomic annotation will be run as a batch job. To be more efficient and for practice, run them as separate batch jobs.  
+Below you can find the scripts and the resources needed for the batch job are:
+
+CheckM2
+* 20G of memory
+* 1 hour of time
+* 200G of local storage
+* 10 CPUs
+
+GTDB-Tk:
+* 70G of memory
+* 2 hours of time
+* 200G of local storage
+* 10 CPUs
+
+You can use the spades script as a template.
+
+### MAG quality control
+
+```bash
+/projappl/project_2009008/tax_tools/bin/checkm2 predict \
+    --input 06_GENOMES \
+    --output-directory 06_GENOMES/checkm2 \
+    --extension fa \
+    --tmpdir $LOCAL_SCRATCH \
+    --threads $SLURM_CPUS_PER_TASK
+```
+
+### MAG taxonomy
+
 ```bash
 export GTDBTK_DATA_PATH="/scratch/project_2009008/DB/release214/"
+
+/projappl/project_2009008/tax_tools/bin/gtdbtk classify_wf \
+    --genome_dir 06_GENOMES \
+    --outdir 06_GENOMES/gtdbtk \
+    --extension fa \
+    --cpus $SLURM_CPUS_PER_TASK \
+    --pplacer_cpus 1 \
+    --scratch_dir $LOCAL_SCRATCH \
+    --tmpdir $LOCAL_SCRATCH
 ```
 
 ## MAG annotation
 
+After quality control and taxonomic annotation of all MAGs, we will choose two for strain engraftment analysis. The Fig. 2 in the original publication can help you choose MAGs that could be of interest. We want to determine whether the donor strains have colonised the recipients. We can talk together which ones you could choose, but keep in mind that we might not have good quality genomes from all of those, so you need to use the CheckM2 and GTDB-Tk results to verify what you have.  
+
+When you have picked two, annotate them both with Bakta using the following command. Make sure the path to the genome is right (`GENOME_BIN`) and use the genus or species annotation as the `GENOME_NAME`.  
+
+And of course allocate some resources: 4 CPUs, 10Gb of memory and 2 hours. 
+
+```bash
+sinteractive -A project_2009008 ...
+```
+
+```bash
+/projappl/project_2009008/bakta/bin/bakta \
+   06_GENOMES/GENOME_BIN.fa  \
+       --db /scratch/project_2009008/DB/bakta/ \
+       --prefix GENOME_NAME \
+       --locus GENOME_NAME \
+       --threads $SLURM_CPUS_PER_TASK \
+       --output 06_GENOMES/GENOME_NAME
+```
+
 ## Strain engraftment
 
 ## Automatic binning
+
+```bash
+/projappl/project_2009008/semibin2/bin/SemiBin2 single_easy_bin \
+    -i contig.fa \
+    -b S1.sorted.bam S2.sorted.bam S3.sorted.bam \
+    -o co-assembly_output
+```
