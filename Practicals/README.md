@@ -499,9 +499,9 @@ export GTDBTK_DATA_PATH="/scratch/project_2009008/DB/release214/"
 
 After quality control and taxonomic annotation of all MAGs, we will choose two for strain engraftment analysis. The Fig. 2 in the original publication can help you choose MAGs that could be of interest. We want to determine whether the donor strains have colonised the recipients. We can talk together which ones you could choose, but keep in mind that we might not have good quality genomes from all of those, so you need to use the CheckM2 and GTDB-Tk results to verify what you have.  
 
-When you have picked two, annotate them both with Bakta using the following command. Make sure the path to the genome is right (`GENOME_BIN`) and use the genus or species annotation as the `GENOME_NAME`.  
+When you have picked two, annotate them both with Bakta using the following command. Make sure the path to the genome is right (`GENOME_BIN`) and use the genus level annotation of the MAG as `GENOME_NAME`.  
 
-And of course allocate some resources: 4 CPUs, 20Gb of memory and 2 hours.  
+And of course allocate some resources: 4 CPUs, 20Gb of memory and 1 hour. It takes around 15-20 min per genome.  
 
 ```bash
 sinteractive -A project_2009008 ...
@@ -511,13 +511,170 @@ sinteractive -A project_2009008 ...
 /projappl/project_2009008/bakta/bin/bakta \
     06_GENOMES/GENOME_BIN.fa  \
     --db /scratch/project_2009008/DB/bakta/ \
+    --skip-pseudo \
+    --skip-sorf \
     --prefix GENOME_NAME \
     --locus GENOME_NAME \
     --threads $SLURM_CPUS_PER_TASK \
-    --output 06_GENOMES/GENOME_NAME
+    --output 06_GENOMES/GENOME_NAME 
 ```
 
 ## Strain engraftment
+
+The next step is to determine the strain engraftment of the selected MAGs from the donor to few selected recipients.  
+We will use anvio workflows, which is a snakemake wrapper for anvi'o. You can learn more about Snakemake, a workflow manager, from here: [https://snakemake.readthedocs.io/en/stable/](https://snakemake.readthedocs.io/en/stable/).  
+
+Before we can run the workflow, we need to pre-process the annotated genome files (Genbank files from Bakta) for anvi'o and prepare few  files for the workflow. 
+
+### Process Genbank files
+
+Process both selected MAGs. The input is the genbank file (`.gbff`) in the bakta output folder.  
+Write the oputput files to the same folder where the input is and add the genome name as the prefix (option `-O`).  
+
+```bash
+module load anvio/7.1
+
+anvi-script-process-genbank \
+    -i PATH/TO/GENOME_NAME.gbff \
+    -O PATH/TO/GENOME_NAME \
+    --annotation-source bakta \
+    --annotation-version 1.5.1 \
+```
+
+__fasta.txt:__
+
+```bash
+name    path    external_gene_calls gene_functional_annotation
+GENOME_NAME 06_GENOMES/GENOME_NAME/GENOME_NAME-contigs.fa   06_GENOMES/GENOME_NAME/GENOME_NAME-external-gene-calls.txt  06_GENOMES/GENOME_NAME/GENOME_NAME-external-functions.txt
+GENOME_NAME 06_GENOMES/GENOME_NAME/GENOME_NAME-contigs.fa   06_GENOMES/GENOME_NAME/GENOME_NAME-external-gene-calls.txt  06_GENOMES/GENOME_NAME/GENOME_NAME-external-functions.txt
+```
+
+__samples.txt:__
+
+```bash
+sample  r1  r2
+TF13_12wk_FMT   07_RECIPIENTS/SRR11941425_1.fastq.gz    07_RECIPIENTS/SRR11941425_2.fastq.gz
+TF13_BL_FMT     07_RECIPIENTS/SRR11941661_1.fastq.gz    07_RECIPIENTS/SRR11941661_2.fastq.gz
+TF13_6wk_FMT    07_RECIPIENTS/SRR11941662_1.fastq.gz    07_RECIPIENTS/SRR11941662_2.fastq.gz
+TF13_26wk_FMT   07_RECIPIENTS/SRR11941663_1.fastq.gz    07_RECIPIENTS/SRR11941663_2.fastq.gz
+TF29_BL_FMT     07_RECIPIENTS/SRR11941593_1.fastq.gz    07_RECIPIENTS/SRR11941593_2.fastq.gz
+TF29_6WK_FMT    07_RECIPIENTS/SRR11941594_1.fastq.gz    07_RECIPIENTS/SRR11941594_2.fastq.gz
+TF29_26wk_FMT   07_RECIPIENTS/SRR11941595_1.fastq.gz    07_RECIPIENTS/SRR11941595_2.fastq.gz
+TF29_12wk_FMT   07_RECIPIENTS/SRR11941596_1.fastq.gz    07_RECIPIENTS/SRR11941596_2.fastq.gz
+TF45_BL_placebo 07_RECIPIENTS/SRR11941426_1.fastq.gz    07_RECIPIENTS/SRR11941426_2.fastq.gz
+TF45_6wk_placebo        07_RECIPIENTS/SRR11941485_1.fastq.gz    07_RECIPIENTS/SRR11941485_2.fastq.gz
+TF45_26wk_placebo       07_RECIPIENTS/SRR11941486_1.fastq.gz    07_RECIPIENTS/SRR11941486_2.fastq.gz
+TF45_12wk_placebo       07_RECIPIENTS/SRR11941487_1.fastq.gz    07_RECIPIENTS/SRR11941487_2.fastq.gz
+```
+
+__config.json:__  
+
+```bash
+{
+    "fasta_txt": "fasta.txt",
+    "anvi_gen_contigs_database": {
+        "--project-name": "{group}",
+        "--description": "",
+        "--skip-gene-calling": "",
+        "--ignore-internal-stop-codons": "",
+        "--skip-mindful-splitting": "",
+        "--contigs-fasta": "",
+        "--split-length": "",
+        "--kmer-size": "",
+        "--skip-predict-frame": "",
+        "--prodigal-translation-table": "",
+        "threads": 6
+    },
+    "anvi_run_hmms": {
+        "run": true,
+        "threads": 6,
+        "--also-scan-trnas": true,
+        "--installed-hmm-profile": "",
+        "--hmm-profile-dir": ""
+    },
+    "samples_txt": "samples.txt",
+    "bowtie": {
+        "additional_params": "--no-unal",
+        "threads": 4
+    },
+    "samtools_view": {
+        "additional_params": "-F 4",
+        "threads": 2
+    },
+    "anvi_profile": {
+        "threads": 4,
+        "--sample-name": "{sample}",
+        "--overwrite-output-destinations": true,
+        "--report-variability-full": "",
+        "--skip-SNV-profiling": "",
+        "--profile-SCVs": "",
+        "--description": "",
+        "--skip-hierarchical-clustering": "",
+        "--distance": "",
+        "--linkage": "",
+        "--min-contig-length": "",
+        "--min-mean-coverage": "",
+        "--min-coverage-for-variability": "",
+        "--cluster-contigs": "",
+        "--contigs-of-interest": "",
+        "--queue-size": "",
+        "--write-buffer-size-per-thread": "",
+        "--max-contig-length": ""
+    },
+    "anvi_merge": {
+        "--sample-name": "{group}",
+        "--overwrite-output-destinations": true,
+        "--description": "",
+        "--skip-hierarchical-clustering": "",
+        "--enforce-hierarchical-clustering": true,
+        "--distance": "",
+        "--linkage": "",
+        "threads": "6"
+    },
+    "import_percent_of_reads_mapped": {
+        "run": true,
+        "threads": ""
+    },
+    "annotate_contigs_database": {
+        "threads": ""
+    },
+    "bowtie_build": {
+        "additional_params": "",
+        "threads": 6
+    },
+    "anvi_init_bam": {
+        "threads": 4
+    },
+    "references_mode": "true",
+    "all_against_all": "true",
+    "kraken_txt": "",
+    "collections_txt": "",
+    "output_dirs": {
+        "FASTA_DIR": "02_FASTA",
+        "CONTIGS_DIR": "03_CONTIGS",
+        "QC_DIR": "01_QC",
+        "MAPPING_DIR": "04_MAPPING",
+        "PROFILE_DIR": "05_ANVIO_PROFILE",
+        "MERGE_DIR": "06_MERGED",
+        "TAXONOMY_DIR": "07_TAXONOMY",
+        "SUMMARY_DIR": "08_SUMMARY",
+        "SPLIT_PROFILES_DIR": "09_SPLIT_PROFILES",
+        "LOGS_DIR": "00_LOGS"
+    },
+    "max_threads": 12,
+    "config_version": "2",
+    "workflow_name": "metagenomics"
+}
+```
+
+Batch job file to run the workflow: 12 CPUs, 50G of memory and 12 hours. 
+
+```bash
+module load anvio/7.1
+
+anvi-run-workflow -w contigs -c config.json
+
+```
 
 ## Automatic binning
 
