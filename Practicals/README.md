@@ -451,7 +451,7 @@ ln -s ../03_ANVIO/SUMMARY_MAGs/bin_by_bin/*MAG*/*MAG*-contigs.fa ./
 cd ..
 ```
 
-The MAG quality control and taxonomic annotation will be run as a batch job. To be more efficient and just for practice, run them as separate batch jobs and start with the one that probably takes longer.  
+The MAG quality control and taxonomic annotation will be run as a batch job to be more efficient and just for practice. Run them as separate batch jobs and start with the one that probably takes longer.  
 Below you can find the scripts. Resources for the batch jobs are as follows:
 
 __CheckM2:__
@@ -470,7 +470,7 @@ __GTDB-Tk:__
 
 You can use the spades script as a template.
 
-### MAG quality control
+### MAG QC with CheckM2
 
 ```bash
 /projappl/project_2009008/tax_tools/bin/checkm2 predict \
@@ -481,7 +481,7 @@ You can use the spades script as a template.
     --threads $SLURM_CPUS_PER_TASK
 ```
 
-### MAG taxonomy
+### MAG taxonomy with GTDB-Tk
 
 ```bash
 export GTDBTK_DATA_PATH="/scratch/project_2009008/DB/release214/"
