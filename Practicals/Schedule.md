@@ -42,7 +42,7 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 10-11 | MAG QC and taxonomy | [Slides](../lectures/05_mag_qc_and_annotation.pdf) |
+| 10-11 | MAG QC and taxonomy | [Slides](../lectures/05_mag_qc_and_taxonomy.pdf) |
 | 11-12 | MAG QC and taxonomy | [Instructions](README.md#mag-qc-and-taxonomy) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-15 | MAG annotation | [Instructions](README.md#mag-annotation) |
