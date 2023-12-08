@@ -488,8 +488,9 @@ export GTDBTK_DATA_PATH="/scratch/project_2009008/DB/release214/"
 
 /projappl/project_2009008/tax_tools/bin/gtdbtk classify_wf \
     --genome_dir 06_GENOMES \
-    --outdir 06_GENOMES/gtdbtk \
+    --out_dir 06_GENOMES/gtdbtk \
     --extension fa \
+    --skip_ani_screen \
     --cpus $SLURM_CPUS_PER_TASK \
     --scratch_dir $LOCAL_SCRATCH \
     --tmpdir $LOCAL_SCRATCH
