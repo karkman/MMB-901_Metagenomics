@@ -473,6 +473,8 @@ You can use the spades script as a template.
 ### MAG QC with CheckM2
 
 ```bash
+export CHECKM2DB=/scratch/project_2009008/DB/CheckM2/CheckM2_database/uniref100.KO.1.dmnd
+
 /projappl/project_2009008/tax_tools/bin/checkm2 predict \
     --input 06_GENOMES \
     --output-directory 06_GENOMES/checkm2 \
