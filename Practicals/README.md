@@ -525,9 +525,9 @@ sinteractive -A project_2009008 ...
 ## Strain engraftment
 
 The next step is to determine the strain engraftment of the selected MAGs from the donor to few selected recipients.  
-We will use anvio workflows, which is a snakemake wrapper for anvi'o. You can learn more about Snakemake, a workflow manager, from here: [https://snakemake.readthedocs.io/en/stable/](https://snakemake.readthedocs.io/en/stable/).  
+We will use anvio workflows, which is a snakemake wrapper for anvi'o. You can learn more about anvi'o workflows here: [https://merenlab.org/2018/07/09/anvio-snakemake-workflows](https://merenlab.org/2018/07/09/anvio-snakemake-workflows) and about Snakemake, the workflow manager used with anvi'o workflows, from here: [https://snakemake.readthedocs.io/en/stable/](https://snakemake.readthedocs.io/en/stable/).  
 
-Before we can run the workflow, we need to pre-process the annotated genome files (Genbank files from Bakta) for anvi'o and prepare few  files for the workflow. 
+Before we can run the workflow, we need to pre-process the annotated genome files (Genbank files from Bakta) for anvi'o and prepare few files for the workflow.  
 
 ### Process Genbank files
 
