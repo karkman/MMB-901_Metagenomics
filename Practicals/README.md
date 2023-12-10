@@ -527,47 +527,71 @@ sinteractive -A project_2009008 ...
 The next step is to determine the strain engraftment of the selected MAGs from the donor to few selected recipients.  
 We will use anvio workflows, which is a snakemake wrapper for anvi'o. You can learn more about anvi'o workflows here: [https://merenlab.org/2018/07/09/anvio-snakemake-workflows](https://merenlab.org/2018/07/09/anvio-snakemake-workflows) and about Snakemake, the workflow manager used with anvi'o workflows, from here: [https://snakemake.readthedocs.io/en/stable/](https://snakemake.readthedocs.io/en/stable/).  
 
-Before we can run the workflow, we need to pre-process the annotated genome files (Genbank files from Bakta) for anvi'o and prepare few files for the workflow.  
+Before we can run the workflow, we need to fetch the recipient data, pre-process the annotated genome files (Genbank files from Bakta) for anvi'o and prepare few files for the workflow.  
+
+First make a whole new folder for all this. And put all output files and files we make in this folder.
+
+```bash
+mkdir 07_RECIPIENTS
+cd 07_RECIPIENTS
+```
+
+### Fetch recipient data
+
+Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you download them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
+
+```bash
+mkdir Data
+wget/Kingfisher/... 
+```
 
 ### Process Genbank files
 
 Process both selected MAGs. The input is the genbank file (`.gbff`) in the bakta output folder.  
-Write the oputput files to the same folder where the input is and add the genome name as the prefix (option `-O`).  
+Write the oputput files to a new folder called `Genomes` in our `07_RECIPIENTS` folder. Add the genome name as the prefix (option `-O`).  
 
 ```bash
+mkdir Genomes
+
 module load anvio/7.1
 
 anvi-script-process-genbank \
     -i PATH/TO/GENOME_NAME.gbff \
     -O PATH/TO/GENOME_NAME \
     --annotation-source bakta \
-    --annotation-version 1.5.1 \
+    --annotation-version 1.5.1
 ```
+
+### Anvi'o workflow
+
+We need to create three files for the workflow. One with the location of the genome files called `fasta.txt`. The second files has the paths to the read files called `samples.txt`. And the last file is a configuration file that has the instructions for what do run in the workflow. This file will be called `config.json`. Put all files in the `07_RECIPINTS` folder.  
+
+Examples of each file below. The first two have to be tab-separated. The third one is a JSON file and has a very different syntax. But this file you do not need to change.  
 
 __fasta.txt:__
 
 ```bash
 name    path    external_gene_calls gene_functional_annotation
-GENOME_NAME 06_GENOMES/GENOME_NAME/GENOME_NAME-contigs.fa   06_GENOMES/GENOME_NAME/GENOME_NAME-external-gene-calls.txt  06_GENOMES/GENOME_NAME/GENOME_NAME-external-functions.txt
-GENOME_NAME 06_GENOMES/GENOME_NAME/GENOME_NAME-contigs.fa   06_GENOMES/GENOME_NAME/GENOME_NAME-external-gene-calls.txt  06_GENOMES/GENOME_NAME/GENOME_NAME-external-functions.txt
+GENOME_NAME Genomes/GENOME_NAME-contigs.fa   Genomes/GENOME_NAME-external-gene-calls.txt  Genomes/GENOME_NAME-external-functions.txt
+GENOME_NAME Genomes/GENOME_NAME-contigs.fa   Genomes/GENOME_NAME-external-gene-calls.txt  Genomes/GENOME_NAME-external-functions.txt
 ```
 
 __samples.txt:__
 
 ```bash
 sample  r1  r2
-TF13_12wk_FMT   07_RECIPIENTS/SRR11941425_1.fastq.gz    07_RECIPIENTS/SRR11941425_2.fastq.gz
-TF13_BL_FMT     07_RECIPIENTS/SRR11941661_1.fastq.gz    07_RECIPIENTS/SRR11941661_2.fastq.gz
-TF13_6wk_FMT    07_RECIPIENTS/SRR11941662_1.fastq.gz    07_RECIPIENTS/SRR11941662_2.fastq.gz
-TF13_26wk_FMT   07_RECIPIENTS/SRR11941663_1.fastq.gz    07_RECIPIENTS/SRR11941663_2.fastq.gz
-TF29_BL_FMT     07_RECIPIENTS/SRR11941593_1.fastq.gz    07_RECIPIENTS/SRR11941593_2.fastq.gz
-TF29_6WK_FMT    07_RECIPIENTS/SRR11941594_1.fastq.gz    07_RECIPIENTS/SRR11941594_2.fastq.gz
-TF29_26wk_FMT   07_RECIPIENTS/SRR11941595_1.fastq.gz    07_RECIPIENTS/SRR11941595_2.fastq.gz
-TF29_12wk_FMT   07_RECIPIENTS/SRR11941596_1.fastq.gz    07_RECIPIENTS/SRR11941596_2.fastq.gz
-TF45_BL_placebo 07_RECIPIENTS/SRR11941426_1.fastq.gz    07_RECIPIENTS/SRR11941426_2.fastq.gz
-TF45_6wk_placebo        07_RECIPIENTS/SRR11941485_1.fastq.gz    07_RECIPIENTS/SRR11941485_2.fastq.gz
-TF45_26wk_placebo       07_RECIPIENTS/SRR11941486_1.fastq.gz    07_RECIPIENTS/SRR11941486_2.fastq.gz
-TF45_12wk_placebo       07_RECIPIENTS/SRR11941487_1.fastq.gz    07_RECIPIENTS/SRR11941487_2.fastq.gz
+TF13_12wk_FMT   Data/SRR11941425_1.fastq.gz    Data/SRR11941425_2.fastq.gz
+TF13_BL_FMT     Data/SRR11941661_1.fastq.gz    Data/SRR11941661_2.fastq.gz
+TF13_6wk_FMT    Data/SRR11941662_1.fastq.gz    Data/SRR11941662_2.fastq.gz
+TF13_26wk_FMT   Data/SRR11941663_1.fastq.gz    Data/SRR11941663_2.fastq.gz
+TF29_BL_FMT     Data/SRR11941593_1.fastq.gz    Data/SRR11941593_2.fastq.gz
+TF29_6WK_FMT    Data/SRR11941594_1.fastq.gz    Data/SRR11941594_2.fastq.gz
+TF29_26wk_FMT   Data/SRR11941595_1.fastq.gz    Data/SRR11941595_2.fastq.gz
+TF29_12wk_FMT   Data/SRR11941596_1.fastq.gz    Data/SRR11941596_2.fastq.gz
+TF45_BL_placebo Data/SRR11941426_1.fastq.gz    Data/SRR11941426_2.fastq.gz
+TF45_6wk_placebo        Data/SRR11941485_1.fastq.gz    Data/SRR11941485_2.fastq.gz
+TF45_26wk_placebo       Data/SRR11941486_1.fastq.gz    Data/SRR11941486_2.fastq.gz
+TF45_12wk_placebo       Data/SRR11941487_1.fastq.gz    Data/SRR11941487_2.fastq.gz
 ```
 
 __config.json:__  
@@ -670,13 +694,21 @@ __config.json:__
 }
 ```
 
-Batch job file to run the workflow: 12 CPUs, 50G of memory and 12 hours. 
+When all the files have been created, check that everything is formatted correctly by doing a dry run.  
 
 ```bash
 module load anvio/7.1
+anvi-run-workflow --workflow metagenomics --config-file config.json --dry-run
+```
 
-anvi-run-workflow -w contigs -c config.json
+Then when all the files are ready and correctly formatted, you can either create a batch file to run the workflow or do it interactively.  
+No matter which way you choose, you will need 12 CPUs, 50G of memory and 3 hours.  
 
+And the commands to run the workflow are below. Make sure you run it inside the `07_RECIPIENTS` folder.  
+
+```bash
+module load anvio/7.1
+anvi-run-workflow --workflow metagenomics --config-file config.json
 ```
 
 ## Automatic binning

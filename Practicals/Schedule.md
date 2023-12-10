@@ -52,7 +52,9 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
+| 10-12 | Strain engraftment with anvi'o workflow | [Instructions](README.md#strain-engraftment) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
+| 13-16 | Strain engraftment with anvi'o workflow cont'd | [Instructions](README.md#strain-engraftment) |
 
 ## Wednesday 13.12.2023
 
