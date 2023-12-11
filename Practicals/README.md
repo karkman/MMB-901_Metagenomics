@@ -713,7 +713,7 @@ anvi-run-workflow --workflow metagenomics --config-file config.json --dry-run
 ```
 
 Then when all the files are ready and correctly formatted, you can either create a batch file to run the workflow or do it interactively.  
-No matter which way you choose, you will need 12 CPUs, 50G of memory and 1 hour.  
+No matter which way you choose, you will need 12 CPUs, 50G of memory and 2 hours.  
 
 And the commands to run the workflow are below. Make sure you run it inside the `07_RECIPIENTS` folder.  
 
