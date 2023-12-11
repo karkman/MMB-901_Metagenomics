@@ -559,7 +559,7 @@ wget/Kingfisher/...
 ### Process Genbank files
 
 Process both selected MAGs. The input is the genbank file (`.gbff`) in the bakta output folder.  
-Write the oputput files to a new folder called `Genomes` in our `07_RECIPIENTS` folder. Add the genome name as the prefix (option `-O`).  
+Write the output files to a new folder called `Genomes` in our `07_RECIPIENTS` folder. Add the genome name as the prefix (option `-O`).  
 
 ```bash
 mkdir Genomes
