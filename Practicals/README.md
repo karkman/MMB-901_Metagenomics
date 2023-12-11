@@ -538,6 +538,15 @@ cd 07_RECIPIENTS
 
 ### Fetch recipient data
 
+We will download the read files for all samples from three recipients. Two from the FMT and one from the placebo group.  
+The subject identifiers for these are:
+
+```bash
+TF13
+TF29
+TF45
+```
+
 Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you download them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
 
 ```bash
