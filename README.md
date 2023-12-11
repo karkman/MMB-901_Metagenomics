@@ -43,7 +43,7 @@ __Practicals:__
 | Friday 8.12.   | 10.15-15.45   | :office: Info| __K1086__  |
 | Monday 11.12.   | 10.15-15.45   | :school: B-building | __341__  |
 | Wednesday 13.12.   | 10.15-15.45   | :office: Info | __K1086__  |
-| Friday 15.12.   | 10.15-15.45   | :office: Info | __K1086'__  |
+| Friday 15.12.   | 10.15-15.45   | :office: Info | __K1086__  |
 
 [__-- Detailed SCHEDULE --__](Practicals/Schedule.md)  
 [__-- Link to PRACTICALS --__](Practicals/README.md)
