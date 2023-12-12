@@ -748,7 +748,7 @@ The outputs from Semibin2 will be written to `08_AUTOMATED_BINNING` and the fold
 
 If you want to try multi-sample binning, re-run the previous command with all the BAM-files and remove the option `--environment human_gut`. Also remember to change the name of the output folder. This will take significantly longer, so make a batch job with more time and more cores (10-16 CPUs).  
 
-After the binning is ready, you can run CheckM2 and GTDB-Tk for the resulting bins and compare the results to your own binning. Both tools accept the genomes in compressed format (`.gz`). Just specify the extension correctly.  
+After the binning is ready, you can run CheckM2 and GTDB-Tk for the resulting bins and compare the results to your own binning. Both tools accept the genome fasta files in compressed format (`.fa.gz`). Just specify the extension correctly.  
 
 We can also import the binning results to anvi'o and visually inspect whether we agree with Semibin2 or not. Unfortunately Semibi2 does not produce a file that could be easily imported to anvi'o as a collection. But we can create one by going thru each genome bin and printing the contig names and the bin they belong to a file.  
 
