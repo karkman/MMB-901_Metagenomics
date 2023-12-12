@@ -725,12 +725,12 @@ anvi-run-workflow --workflow metagenomics --config-file config.json
 
 ## Automatic binning
 
-There are several different tools for automated binning and they all perform very differently (as you probably have seen). We will use [SemiBin2](https://github.com/BigDataBiology/SemiBin) for the automated binning.  
+There are several different tools for automated binning and they all perform very differently (as you probably read in the blog post). We will use [SemiBin2](https://github.com/BigDataBiology/SemiBin) for the automated binning.  
 
-Semibin2 uses deep learning in metagnomic binning and has pre-trained models for several different environments, including human gut. However, with multiple samples the pre-trained models cannot be used and we would need to train the model with our data. Using a pre-trained model is faster, but maybe not that accurate. We still prefer speed over accuracy on this course. In case we have time, we can try the multi-sample mode for our data.  
+Semibin2 uses deep learning in metagenomic binning and has pre-trained models for several different environments, including human gut. However, with multiple samples the pre-trained models cannot be used and we would need to train the model with our data. The model training takes some time, although it might be more accurate. Running Semibin2 with pre-trained model is a lot faster and we will prefer speed over accuracy on this course. In case we have time, we can try the multi-sample mode for our data.  
 
-The job can be run interactively or as a batch job. You will need at least 6 CPUs, 50G of memory, 100G of local storage and many hours (to be sure this time). My test run took 35 min.  
-Allocate the resources or write a batch job script and use the following command to run Semibin2. We will use the same files we created and used in the manual binning with anvi'o.  
+We will use the same files we created and used in the manual binning with anvi'o. The job can be run interactively or as a batch job. You will need at least 6 CPUs, 50G of memory, 100G of local storage and many hours (to be sure this time). My test run took 35 min.  
+Allocate the resources or write a batch job script and use the following command to run Semibin2.  
 
 Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
 
@@ -750,7 +750,7 @@ If you want to try multi-sample binning, re-run the previous command with all th
 
 After the binning is ready, you can run CheckM2 and GTDB-Tk for the resulting bins and compare the results to your own binning. Both tools accept the genome fasta files in compressed format (`.fa.gz`). Just specify the extension correctly.  
 
-We can also import the binning results to anvi'o and visually inspect whether we agree with Semibin2 or not. Unfortunately Semibi2 does not produce a file that could be easily imported to anvi'o as a collection. But we can create one by going thru each genome bin and printing the contig names and the bin they belong to a file.  
+We can also import the binning results to anvi'o and visually inspect whether we agree with Semibin2 or not. Unfortunately Semibi2 does not produce a file that could be easily imported to anvi'o as a bin collection. But we can create one by going thru each genome bin and printing the contig names and the bin they belong into a file that we can import to anvi'o.  
 
 ```bash
 for file in 08_AUTOMATED_BINNING/output_bins/*.gz; do
@@ -775,4 +775,4 @@ anvi-import-collection \
 
 Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be patient.  
 
-You can also try to make similar figures from few bins as in the blog post [Visualizing the fate of contigs across metagenomic binning algorithms](https://merenlab.org/2020/01/02/visualizing-metagenomic-bins/). You need to export your own collection and semibin collection from anvi'o and then copy the script that was used to make those figures. Ands you also need to modify the script to read in the correct input files having the binning results.  
+You can also try to make similar figures from few bins as in the blog post [Visualizing the fate of contigs across metagenomic binning algorithms](https://merenlab.org/2020/01/02/visualizing-metagenomic-bins/). You need to export your own collection and semibin collection from anvi'o and then copy the script that was used to make those figures. And you also need to modify the script to read in the correct input files having the binning results. Read the blog post carefully and inspect the script and its comments.  
