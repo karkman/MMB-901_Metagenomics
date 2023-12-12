@@ -60,10 +60,15 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
+| 10-11 | Automatic binning | [Slides](../lectures/06_automatic_binning.pdf) |
+| 11-12 | Automatic binning | [Instructions](README.md#automatic-binning) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
+| 13-16 | Automatic binning cont'd | [Instructions](README.md#automatic-binning) |
 
 ## Friday 15.12.2023
 
 | Time | Description | Link |
 | --- | --- | -- |
+| 10-12 | Group exam | in Moodle |
 | 12-13 | Lunch break | :plate_with_cutlery: |
+| 13-16 | Q&A and wrap-up |  |
