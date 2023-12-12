@@ -726,6 +726,7 @@ anvi-run-workflow --workflow metagenomics --config-file config.json
 ## Automatic binning
 
 There are several different tools for automated binning and they all perform very differently (as you probably have seen). We will use [SemiBin2](https://github.com/BigDataBiology/SemiBin) for the automated binning.  
+
 Semibin2 uses deep learning in metagnomic binning and has pre-trained models for several different environments, including human gut. However, with multiple samples the pre-trained models cannot be used and we would need to train the model with our data. Using a pre-trained model is faster, but maybe not that accurate. We still prefer speed over accuracy on this course. In case we have time, we can try the multi-sample mode for our data.  
 
 The job can be run interactively or as a batch job. You will need at least 6 CPUs, 50G of memory, 100G of local storage and many hours (to be sure this time). My test run took 35 min.  
