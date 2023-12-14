@@ -72,4 +72,4 @@
 | 10-12 | Group exam | in Moodle |
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-14 | Self-assesment | in Moodle |
-| 14-16 | Q&A and wrap-up |  |
+| 14-16 | Q&A and wrap-up | [Slides](../lectures/07_wrap-up.pdf) |
