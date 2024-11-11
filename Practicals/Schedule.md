@@ -1,7 +1,3 @@
-table {
-    width:100%;
-}
-
 # Course Schedule
 
 ## Monday 27.11.2023  
@@ -53,6 +49,11 @@ table {
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
 ## Friday 8.12.2023
+<style>
+    table {
+        width: 100%;
+    }
+</style>
 
 | Time | Description | Link |
 | --- | --- | -- |
