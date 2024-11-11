@@ -1,3 +1,7 @@
+table {
+    width:100%;
+}
+
 # Course Schedule
 
 ## Monday 27.11.2023  
@@ -28,6 +32,7 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Read-based taxonomy | [Instructions](README.md#read-based-taxonomy) |
 </table>
+
 ## Friday 1.12.2023
 
 | Time | Description | Link |
@@ -39,9 +44,6 @@
 | 15-16 | Self-assessment | in Moodle |
 
 ## Monday 4.12.2023
-table {
-    width:100%;
-}
     
 | Time | Description | Link |
 | --- | --- | -- |
