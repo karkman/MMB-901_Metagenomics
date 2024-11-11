@@ -1,7 +1,13 @@
 # Course Schedule
 
 ## Monday 27.11.2023  
-
+<table>
+<colgroup>
+  <col style="width: 20%;">
+  <col style="width: 50%;">
+  <col style="width: 30%;">
+</colgroup>
+  
 | Time | Description | Link |
 | --- | --- | -- |
 | 10-11 | Introduction | [Slides](../lectures/01_introduction.pdf) |
@@ -9,6 +15,7 @@
 | 12-13 | Lunch break  | :plate_with_cutlery: |
 | 13-14 | Data retrieval | [Instructions](README.md#data) |
 | 14-16 | Quality control | [Instructions](README.md#data) |
+</table>
 
 ## Wednesday 29.11.2023
 
