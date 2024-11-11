@@ -36,6 +36,7 @@ The course will be from Monday 11th of November to Friday 15th of December at Vi
 __Practicals:__
 
 <table>
+  <table width="100%">
 <colgroup>
   <col style="width: 30%;">
   <col style="width: 30%;">
