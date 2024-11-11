@@ -39,13 +39,16 @@
 | 15-16 | Self-assessment | in Moodle |
 
 ## Monday 4.12.2023
-
+<table>
+  <table width="100%">
+    
 | Time | Description | Link |
 | --- | --- | -- |
 | 10-11 | Recap from Friday | [Slides](../lectures/04_Fri_recap.pdf) |
 | 11-12 | Manual binnning | [Instructions](README.md#interactive-use-and-binning) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
+</table>
 
 ## Friday 8.12.2023
 
