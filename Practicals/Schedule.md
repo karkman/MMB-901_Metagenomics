@@ -1,33 +1,23 @@
 # Course Schedule
 
 ## Monday 27.11.2023  
-<table>
-<colgroup>
-  <col style="width: 20%;">
-  <col style="width: 50%;">
-  <col style="width: 30%;">
-</colgroup>
   
 | Time | Description | Link |
 | --- | --- | -- |
-| 10-11 | Introduction | [Slides](../lectures/01_introduction.pdf) |
-| 11-12 | Setup | [Instructions](README.md#setup) |
-| 12-13 | Lunch break  | :plate_with_cutlery: |
-| 13-14 | Data retrieval | [Instructions](README.md#data) |
-| 14-16 | Quality control | [Instructions](README.md#data) |
-</table>
+| 10-11 | Introduction       | [Slides](../lectures/01_introduction.pdf) |
+| 11-12 | Setup              | [Instructions](README.md#setup)           |
+| 12-13 | Lunch break        | :plate_with_cutlery:                      |
+| 13-14 | Data retrieval     | [Instructions](README.md#data)            |
+| 14-16 | Quality control    | [Instructions](README.md#data)            |
 
 ## Wednesday 29.11.2023
-<table>
-  <table width="100%">
-    
+
 | Time | Description | Link |
 | --- | --- | -- |
 | 10-11 | Metagenomic assembly & read-based approaches | [Slides](../lectures/02_assembly-and-read-based.pdf) |
 | 11-12 | Metagenome assembly | [Instructions](README.md#metagenome-assembly) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Read-based taxonomy | [Instructions](README.md#read-based-taxonomy) |
-</table>
 
 ## Friday 1.12.2023
 
@@ -49,12 +39,6 @@
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
 ## Friday 8.12.2023
-
-<style>
-    table {
-        width: 100%;
-    }
-</style>  
 
 | Time | Description | Link |
 | --- | --- | -- |
