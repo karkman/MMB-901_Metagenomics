@@ -41,7 +41,8 @@ __Practicals:__
   <col style="width: 30%;">
   <col style="width: 30%;">
   <col style="width: 10%;">
-</colgroup>  
+</colgroup>
+  
 | Day | Time | Building | Room |  
 | --- | --- | --- | --- |  
 | Monday 27.11.    | 10.15-15.45   | :school: B-building | __341__   |
@@ -52,6 +53,7 @@ __Practicals:__
 | Monday 11.12.   | 10.15-15.45   | :school: B-building | __341__  |
 | Wednesday 13.12.   | 10.15-15.45   | :office: Info | __K1086__  |
 | Friday 15.12.   | 10.15-15.45   | :office: Info | __K1086__  |
+
 </table>  
 
 [__-- Detailed SCHEDULE --__](Practicals/Schedule.md)  
