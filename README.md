@@ -34,24 +34,18 @@ __Recommended prerequisites:__
 The course will be from Monday 11th of November to Friday 15th of December at Viikki Campus.
 
 __Practicals:__
-<table>
-<colgroup>
-  <col style="width: 30%;">
-  <col style="width: 30%;">
-  <col style="width: 30%;">
-  <col style="width: 10%;">
-</colgroup>
   
-| Day | Time | Building | Room |  
+| Day | Time | Building | :Class room: |  
 | --- | --- | --- | --- |  
-| Monday 27.11.    | 10.15-15.45   | :school: B-building | __341__   |
-| Wednesday 29.11.  | 10.15-15.45   | :office: Info | __K1086__  |
-| Friday 1.12.| 10.15-15.45   | :office: Info | __K1086__  |
-| Monday 4.12.  | 10.15-15.45   | :school: B-building | __341__  |
-| Friday 8.12.   | 10.15-15.45   | :office: Info| __K1086__  |
-| Monday 11.12.   | 10.15-15.45   | :school: B-building | __341__  |
-| Wednesday 13.12.   | 10.15-15.45   | :office: Info | __K1086__  |
-| Friday 15.12.   | 10.15-15.45   | :office: Info | __K1086__  |
+| Monday 25.11.    | 10.15-15.45   | :office: Info | __K1046__   |
+| Wednesday 27.11.  | 10.15-15.45   | :office: Bio1 | __1401.4__  |
+| Friday 29.11.| 10.15-15.45   | :office: Bio1 | __1401.4__  |
+| Monday 2.12.  | 10.15-15.45   | :office: Info | __K1048__  |
+| Wednesday 4.12.   | 10.15-15.45   | :office: Bio1 | __1041.4__  |
+| Thursday 5.12.   | 10.15-15.45   | :office: Bio1 | __1401.4__  |
+| Monday 9.12.   | 10.15-15.45   | :office: Info | __K1046__  |
+| Wednesday 11.12.   | 10.15-15.45   | :office: Bio1 | __1401.4__  |
+| Friday 13.12.   | 10.15-15.45   | :office: Bio1 | __1401.4__  |
 
 </table>  
 
@@ -75,4 +69,4 @@ By completing this course, you will:
 ## Organizers and teachers
 
 :man_technologist: Antti Karkman, University of Helsinki  
-:woman_technologist: Melina Markkanen,  University of Helsinki  
+:man_technologist: Frillix Brocks,  University of Helsinki  
