@@ -42,7 +42,7 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
-### Thursday
+### Wednesday
     
 | Time | Description | Link |
 | --- | --- | -- |
@@ -51,7 +51,7 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
-### Friday 
+### Thursday
 
 | Time | Description | Link |
 | --- | --- | -- |
