@@ -1,6 +1,8 @@
 # Course Schedule
 
-## Monday 27.11.2023  
+## Week 1
+
+### Monday
   
 | Time | Description | Link |
 | --- | --- | -- |
@@ -10,7 +12,7 @@
 | 13-14 | Data retrieval     | [Instructions](README.md#data)            |
 | 14-16 | Quality control    | [Instructions](README.md#data)            |
 
-## Wednesday 29.11.2023
+### Wednesday
 
 | Time | Description | Link |
 | --- | --- | -- |
@@ -19,7 +21,7 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Read-based taxonomy | [Instructions](README.md#read-based-taxonomy) |
 
-## Friday 1.12.2023
+### Friday
 
 | Time | Description | Link |
 | --- | --- | -- |
@@ -29,7 +31,9 @@
 | 13-15 | Setting up anvi'o files | [Instructions](README.md#genome-resolved-metagenomics) |
 | 15-16 | Self-assessment | in Moodle |
 
-## Monday 4.12.2023
+## Week 2
+
+### Monday
     
 | Time | Description | Link |
 | --- | --- | -- |
@@ -38,7 +42,16 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
-## Friday 8.12.2023
+### Thursday
+    
+| Time | Description | Link |
+| --- | --- | -- |
+| 10-11 | Recap from Friday | [Slides](../lectures/04_Fri_recap.pdf) |
+| 11-12 | Manual binnning | [Instructions](README.md#interactive-use-and-binning) |
+| 12-13 | Lunch break | :plate_with_cutlery: |
+| 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
+
+### Friday 
 
 | Time | Description | Link |
 | --- | --- | -- |
@@ -48,7 +61,9 @@
 | 13-15 | MAG annotation | [Instructions](README.md#mag-annotation) |
 | 15-16 | Self-assesment | In Moodle |
 
-## Monday 11.12.2023
+## Week 3
+
+### Monday
 
 | Time | Description | Link |
 | --- | --- | -- |
@@ -56,7 +71,7 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Strain engraftment with anvi'o workflow cont'd | [Instructions](README.md#strain-engraftment) |
 
-## Wednesday 13.12.2023
+### Wednesday 
 
 | Time | Description | Link |
 | --- | --- | -- |
@@ -65,7 +80,7 @@
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Automatic binning cont'd | [Instructions](README.md#automatic-binning) |
 
-## Friday 15.12.2023
+### Friday
 
 | Time | Description | Link |
 | --- | --- | -- |
