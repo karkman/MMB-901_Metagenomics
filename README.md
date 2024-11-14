@@ -35,8 +35,8 @@ The course will be from Monday 11th of November to Friday 15th of December at Vi
 
 __Practicals:__
   
-| Day | Time | Building | :Class room: |  
-| --- | --- | --- | --- |  
+| Day | Time | Building | Class room |  
+| --- | --- | --- | :---: |  
 | Monday 25.11.    | 10.15-15.45   | :office: Info | __K1046__   |
 | Wednesday 27.11.  | 10.15-15.45   | :office: Bio1 | __1401.4__  |
 | Friday 29.11.| 10.15-15.45   | :office: Bio1 | __1401.4__  |
