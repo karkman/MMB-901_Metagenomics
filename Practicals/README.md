@@ -152,7 +152,7 @@ Before running any real analyses, we should do quality control (QC) for the sequ
 We use two widely used programs that are pre-installed in Puhti:
 
 * [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) for running the QC fpor each sequence file.
-* [MultiqC](https://multiqc.info/) to combine the individual reports from FastQC.  
+* [MultiQC](https://multiqc.info/) to combine the individual reports from FastQC.  
 
 ```bash
 cd /scratch/project_2009008/$USER/MMB-901_Metagenomics
