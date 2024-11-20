@@ -44,9 +44,9 @@ When the down left corner says `SSH:puhti.csc.fi`, you're connected.
 
 ### Setting up the course folders
 
-The main course directory is located at `/scratch/project_2009008`.  
+The main course directory is located at `/scratch/project_2012151`.  
 There you will set up your own directory where you will perform all the tasks for this course.  
-Some of the tools needed on this course can be found from the course project applications folder `/projappl/project_2009008`.  
+Some of the tools needed on this course can be found from the course project applications folder `/projappl/project_2012151`.  
 
 First list all projects you're affiliated with in CSC.
 
@@ -54,7 +54,7 @@ First list all projects you're affiliated with in CSC.
 csc-workspaces
 ```
 
-You should see the course project `MMB-901_metagenomics`.
+You should see the course project `MMB-901`.
 So let's create a folder for you inside the scratch folder, you can find the path in the output from the previous command.
 
 ```bash
@@ -64,7 +64,7 @@ mkdir $USER
 
 Check with `ls`; which folder did `mkdir $USER` create?
 
-This directory (`/scratch/project_2009008/your-user-name`) is your own working directory.  
+This directory (`/scratch/project_2012151/your-user-name`) is your own working directory.  
 Every time you log into Puhti, you should use `cd` to navigate to this directory.
 
 Go to your own folder and clone the course repository there.  
@@ -121,29 +121,44 @@ Then go to [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) and f
 Finallly download only the accession numbers and make a file (`DF16_accessions.txt`) with only the accession, one line per accesion to the data folder in Puhti (`01_DATA/`).  
 We will use that file in the next step to download the data to Puhti.  
 
-We will use [Kingfisher](https://wwood.github.io/kingfisher-download/) to download the read files. It has been installed to Puhti under our course project application folder.  
-But before downloading, have a look at the documentation and find out how to use it with a list of accessions. We will use the `ena-ftp` method for downloading the reads.  
+__CHANGE THIS TO FASTERQ-DUMP__  
+
+We will use a tool called [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) from NCBI to download the sequencig read files. It is installed on Puhti by default under the biokit module, so we need to load that first.  
+But before downloading, have a look at the documentation to understand the different options we are using.  
 
 Apply for resources. This doesn't take that long, so no real need for screen session.  
 
 ```bash
-sinteractive -A project_2009008 -m 10G -c 4 
+sinteractive -A project_2012151 -m 10G -c 8
 ```
 
-Download the data to the data folder.  
+As we have a list of accessions, we could either download each one by one, write them separately on the command line,
+ or we can make a for loop that reads the accession file and downloads them one by one.  
 
 ```bash
-cd 01_DATA
+module load biokit
 
-/projappl/project_2009008/Kingfisher/bin/kingfisher get \
-    ## fill in the needed options to download the read files
-    -m ena-ftp \
-    --download-threads $SLURM_CPUS_PER_TASK \
-    --extraction-threads $SLURM_CPUS_PER_TASK
+for ACC in `cat DF16_accessions.txt`; do
+    fasterq-dump \
+        --split-files \
+        --skip-technical \
+        --outdir 01_DATA \
+        --threads $SLURM_CPUS_PER_TASK \
+        $ACC
+done
 ```
 
 After the job has finished, check what you got? Make sure you have all 9 sequenicng experiments downloaded.  
-If not, check which ones are missing and download them individually with `kingfisher` using the run accession(s).  
+If not, check which ones are missing and download them individually with `fasterq-dump` using the run accession(s).  
+
+To save some space, we should compress the sequence files (`fasterq-dump` downloads uncompressed fastq files). 
+This is rather slow, so consider running it in screen. Before opening a screen, check how screen works from above.  
+
+```bash 
+pigz 01_DATA/*.fastq
+```
+
+After this is done, check that each sequence file in the folder `01_DATA` has the ending `.gz`.  
 
 ## Quality control
 
@@ -155,7 +170,7 @@ We use two widely used programs that are pre-installed in Puhti:
 * [MultiQC](https://multiqc.info/) to combine the individual reports from FastQC.  
 
 ```bash
-cd /scratch/project_2009008/$USER/MMB-901_Metagenomics
+cd /scratch/project_2012151/$USER/MMB-901_Metagenomics
 mkdir 01_DATA/FASTQC
 
 module load biokit
@@ -241,7 +256,7 @@ After we have analysed the taxonomic profiles of the donor, we can combine the r
 First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
-cp /scratch/project_2009008/Data/metaphlan/*.txt 05_TAXONOMY/
+cp /scratch/project_2012151/Data/metaphlan/*.txt 05_TAXONOMY/
 
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
@@ -258,7 +273,7 @@ QUAST can be found from Puhti, so just need to load the quast module.
 But first allocate some resources.  
 
 ```bash
-sinteractive --account project_2009008
+sinteractive --account project_2012151
 ```
 
 While you wait for the resources, have a look at the quast manual and read about the options were using.  
@@ -413,7 +428,7 @@ But since there are probably a lot of low quality bins (low completeness), let's
 Allocate resources for the job. You will need the default resource for 30 min.  
 
 ```bash
-sinteractive -A project_2009008 -t 00:30:00
+sinteractive -A project_2012151 -t 00:30:00
 ```
 
 ```bash
@@ -474,9 +489,9 @@ You can use the spades script as a template.
 ### MAG QC with CheckM2
 
 ```bash
-export CHECKM2DB="/scratch/project_2009008/DB/CheckM2/CheckM2_database/uniref100.KO.1.dmnd"
+export CHECKM2DB="/scratch/project_2012151/DB/CheckM2/CheckM2_database/uniref100.KO.1.dmnd"
 
-/projappl/project_2009008/tax_tools/bin/checkm2 predict \
+/projappl/project_2012151/tax_tools/bin/checkm2 predict \
     --input 06_GENOMES \
     --output-directory 06_GENOMES/checkm2 \
     --extension fa \
@@ -487,9 +502,9 @@ export CHECKM2DB="/scratch/project_2009008/DB/CheckM2/CheckM2_database/uniref100
 ### MAG taxonomy with GTDB-Tk
 
 ```bash
-export GTDBTK_DATA_PATH="/scratch/project_2009008/DB/release214/"
+export GTDBTK_DATA_PATH="/scratch/project_2012151/DB/release214/"
 
-/projappl/project_2009008/tax_tools/bin/gtdbtk classify_wf \
+/projappl/project_2012151/tax_tools/bin/gtdbtk classify_wf \
     --genome_dir 06_GENOMES \
     --out_dir 06_GENOMES/gtdbtk \
     --extension fa \
@@ -508,13 +523,13 @@ When you have picked two, annotate them both with Bakta using the following comm
 And of course allocate some resources: 4 CPUs, 20Gb of memory and 1 hour. It takes around 15-20 min per genome.  
 
 ```bash
-sinteractive -A project_2009008 ...
+sinteractive -A project_2012151 ...
 ```
 
 ```bash
-/projappl/project_2009008/bakta/bin/bakta \
+/projappl/project_2012151/bakta/bin/bakta \
     06_GENOMES/GENOME_BIN.fa  \
-    --db /scratch/project_2009008/DB/bakta/ \
+    --db /scratch/project_2012151/DB/bakta/ \
     --skip-pseudo \
     --skip-sorf \
     --prefix GENOME_NAME \
@@ -735,7 +750,7 @@ Allocate the resources or write a batch job script and use the following command
 Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
 
 ```bash
-/projappl/project_2009008/Semibin2/bin/SemiBin2 single_easy_bin \
+/projappl/project_2012151/Semibin2/bin/SemiBin2 single_easy_bin \
     --input-fasta 03_ANVIO/contigs2500.fasta \
     --input-bam 04_MAPPING/SRR11941565.bam \
     --environment human_gut \
