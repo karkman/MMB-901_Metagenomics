@@ -309,7 +309,7 @@ The first task is to create the contigs database from our assembled contigs. To 
 During the contigs database creation, anvi'o does gene calling with prodigal, calculates the tetranucleotide frequencies for each contigs and splits longer contigs into ~20 000 nt chunks called splits.  
 
 ```bash
-module load anvio/7.1
+module load anvio/8
 anvi-script-reformat-fasta 02_ASSEMBLY/contigs.fasta --min-len 2500 -o 03_ANVIO/contigs2500.fasta
 anvi-gen-contigs-database -f 03_ANVIO/contigs2500.fasta -T 6 -o 03_ANVIO/CONTIGS.db
 ```
@@ -331,7 +331,7 @@ To obtain the differential coverage information for each contig in our database,
 We used [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for the mapping and the first step is to create an index of the fasta file.  
 
 ```bash
- bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs
+bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs
 ```
 
 As we will be running the same job for all nine samples, the quickest way is to create an array job for the task.  
@@ -378,7 +378,7 @@ When all the mapping jobs have been finished, we can merge all the single profil
 For this task you will need 40G of memory and about 30 min.  
 
 ```bash
- anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering
+anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering
  ```
 
 ### Interactive use and binning
@@ -390,6 +390,7 @@ We will allocate the ports in class.
 When you know your port number (`XXXX`), assign it to the environemntal variable `$ANVIO_PORT`.  
 
 ```bash
+module load anvio/8
 ANVIO_PORT=XXXX
 ```
 
@@ -415,7 +416,7 @@ anvi-rename-bins \
     --prefix DF16_Bins \
     --report-file 03_ANVIO/Bins_report.txt
 
- anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
+anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
  ```
 
 ## MAG QC and taxonomy
@@ -563,13 +564,19 @@ TF29
 TF45
 ```
 
+Find all accession numbers for these subjects from SRA and write them down. 
 You should have 12 read accessions to download.  
 
 Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you download them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
 
 ```bash
 mkdir Data
-wget/Kingfisher/... 
+```
+
+Make an array job that downloads the read files for each accession with `fasterq-dump` and also compresses them with `pigz`. Use the metaphaln script as an example and the same commands we used to download the donor metagenomes.  
+
+```bash
+sbatch src/YOUR_ARRAY_SCRIPT.sh
 ```
 
 ### Process Genbank files
