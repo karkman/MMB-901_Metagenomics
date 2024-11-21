@@ -16,11 +16,11 @@
 
 | Time | Description | Link |
 | --- | --- | -- |
-| 10-11 | Metagenomic assembly & read-based approaches | [Slides](../lectures/02_assembly-and-read-based.pdf) |
-| 11-12 | Metagenome assembly | [Instructions](README.md#metagenome-assembly) |
+| 10-11 | Read-based approaches | [Slides](../lectures/02_assembly-and-read-based.pdf) |
+| 11-12 | Read-based taxonomy | [Instructions](README.md#read-based-taxonomy) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
-| 13-16 | Read-based taxonomy | [Instructions](README.md#read-based-taxonomy) |
-
+| 10-11 | Metagenomic assembly | [Slides](../lectures/02_assembly-and-read-based.pdf) |
+| 13-16 | Metagenomic assembly | [Instructions](README.md#metagenome-assembly) |
 ### Friday
 
 | Time | Description | Link |
