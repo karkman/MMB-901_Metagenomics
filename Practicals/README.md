@@ -493,7 +493,7 @@ You can use the spades script as a template.
 ### MAG QC with CheckM2
 
 ```bash
-export CHECKM2DB="/scratch/project_2012151/DB/CheckM2/CheckM2_database/uniref100.KO.1.dmnd"
+export CHECKM2DB="/scratch/project_2012151/DBs/CheckM2/CheckM2_database/uniref100.KO.1.dmnd"
 
 /projappl/project_2012151/tax_tools/bin/checkm2 predict \
     --input 06_GENOMES \
@@ -506,7 +506,7 @@ export CHECKM2DB="/scratch/project_2012151/DB/CheckM2/CheckM2_database/uniref100
 ### MAG taxonomy with GTDB-Tk
 
 ```bash
-export GTDBTK_DATA_PATH="/scratch/project_2012151/DB/release214/"
+export GTDBTK_DATA_PATH="/scratch/project_2012151/DBs/release220/"
 
 /projappl/project_2012151/tax_tools/bin/gtdbtk classify_wf \
     --genome_dir 06_GENOMES \
