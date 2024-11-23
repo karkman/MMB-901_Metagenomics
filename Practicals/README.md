@@ -121,8 +121,6 @@ Then go to [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) and f
 Finallly download only the accession numbers and make a file (`DF16_accessions.txt`) with only the accession, one line per accesion to the data folder in Puhti (`01_DATA/`).  
 We will use that file in the next step to download the data to Puhti.  
 
-__CHANGE THIS TO FASTERQ-DUMP__  
-
 We will use a tool called [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) from NCBI to download the sequencig read files. It is installed on Puhti by default under the biokit module, so we need to load that first.  
 But before downloading, have a look at the documentation to understand the different options we are using.  
 
@@ -137,6 +135,8 @@ As we have a list of accessions, we could either download each one by one, write
 
 ```bash
 module load biokit
+
+mkdir -p 01_DATA
 
 for ACC in `cat DF16_accessions.txt`; do
     fasterq-dump \
@@ -309,7 +309,9 @@ The first task is to create the contigs database from our assembled contigs. To 
 During the contigs database creation, anvi'o does gene calling with prodigal, calculates the tetranucleotide frequencies for each contigs and splits longer contigs into ~20 000 nt chunks called splits.  
 
 ```bash
+mkdir -p 03_ANVIO
 module load anvio/8
+
 anvi-script-reformat-fasta 02_ASSEMBLY/contigs.fasta --min-len 2500 -o 03_ANVIO/contigs2500.fasta
 anvi-gen-contigs-database -f 03_ANVIO/contigs2500.fasta -T 6 -o 03_ANVIO/CONTIGS.db
 ```
@@ -331,6 +333,7 @@ To obtain the differential coverage information for each contig in our database,
 We used [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for the mapping and the first step is to create an index of the fasta file.  
 
 ```bash
+mkdir -p 04_MAPPING
 bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs
 ```
 
@@ -462,7 +465,7 @@ exit
 Now each bin that had completeness and redundancy (according to anvi'o) over 70 % and under 10 %, respectively, will have "MAG" in its name. For example `DF16_MAG_00001`. So we can only pick those for further analyses. We will make a folder with softlinks to all of our MAGs and then analyze only these with CheckM2 and GTDB-Tk.  
 
 ```bash
-mkdir 06_GENOMES
+mkdir -p 06_GENOMES
 cd 06_GENOMES
 ln -s ../03_ANVIO/SUMMARY_MAGs/bin_by_bin/*MAG*/*MAG*-contigs.fa ./
 cd ..
@@ -549,7 +552,7 @@ Before we can run the workflow, we need to fetch the recipient data, pre-process
 First make a whole new folder for all this. And put all output files and files we make in this folder.
 
 ```bash
-mkdir 07_RECIPIENTS
+mkdir -p 07_RECIPIENTS
 cd 07_RECIPIENTS
 ```
 

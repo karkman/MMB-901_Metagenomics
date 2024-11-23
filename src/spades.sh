@@ -11,6 +11,7 @@
 #SBATCH --gres=nvme:500
 
 cd /scratch/project_2009008/$USER/MMB-901_Metagenomics
+mkdir -p 00_LOGS
 
 module load spades/3.15.5
 

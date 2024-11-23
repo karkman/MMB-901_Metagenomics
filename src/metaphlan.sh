@@ -12,6 +12,8 @@
 #SBATCH --gres=nvme:100
 
 module load metaphlan/4.0.6
+mkdir -p 00_LOGS
+mkdir -p 05_TAXONOMY
 
 SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p 01_DATA/DF16_accessions.txt)
 
