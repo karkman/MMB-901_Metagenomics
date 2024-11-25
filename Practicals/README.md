@@ -35,7 +35,7 @@ Using read-based and assembly-based approaches, we will study the human gut micr
 * Type your password and hit "Enter"
 * In the following dialogue, type __yes__ and hit "Enter"
 
-###############################################################################
+###############################################################################  
 **Notes for Windows user with VS Code**
 
 If you have problems in connecting, follow the following instructions:
