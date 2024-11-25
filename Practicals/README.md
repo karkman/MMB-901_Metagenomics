@@ -35,6 +35,13 @@ Using read-based and assembly-based approaches, we will study the human gut micr
 * Type your password and hit "Enter"
 * In the following dialogue, type __yes__ and hit "Enter"
 
+**Notes for Windows user with VS Code**
+
+If you have problems in connecting, follow the following instructions:
+
+* When conneting to remote host open the config file that VS Cocde suggests  
+* Add a newline after your username with the following: `MACs hmac-sha2-512`  
+
 When the down left corner says `SSH:puhti.csc.fi`, you're connected.
 
 * From the menu select `Terminal > New Terminal` and you should see a new panel. This is the __command line__.
@@ -118,10 +125,10 @@ First we will retrieve all the metagenomic sequence files for the female super-d
 Go to the publication and find the sequencing project repository accession (BioProject accession).  
 Then go to [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) and find all the reads for the project.  Open them in Run selector and find the run accessions of the samples from the super-donor (9 sequencing runs).  
 
-Finallly download only the accession numbers and make a file (`DF16_accessions.txt`) with only the accession, one line per accesion to the data folder in Puhti (`01_DATA/`).  
+Finallly download only the accession numbers and make a file (`DF16_accessions.txt`) with only the accession, one line per accesion, to the data folder in Puhti (`01_DATA/`).  
 We will use that file in the next step to download the data to Puhti.  
 
-We will use a tool called [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) from NCBI to download the sequencig read files. It is installed on Puhti by default under the biokit module, so we need to load that first.  
+We will use a tool called [fasterq-dump](https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump) from NCBI to download the sequencing read files. It is installed on Puhti by default under the biokit module, so we need to load that first.  
 But before downloading, have a look at the documentation to understand the different options we are using.  
 
 Apply for resources. This doesn't take that long, so no real need for screen session.  
@@ -130,8 +137,7 @@ Apply for resources. This doesn't take that long, so no real need for screen ses
 sinteractive -A project_2012151 -m 10G -c 8
 ```
 
-As we have a list of accessions, we could either download each one by one, write them separately on the command line,
- or we can make a for loop that reads the accession file and downloads them one by one.  
+As we have a list of accessions, we could either download each one by one, write them separately on the command line, or we can make a for loop that reads the accession file and downloads them one by one.  
 
 ```bash
 module load biokit
@@ -493,7 +499,7 @@ You can use the spades script as a template.
 ### MAG QC with CheckM2
 
 ```bash
-export CHECKM2DB="/scratch/project_2012151/DBs/CheckM2/CheckM2_database/uniref100.KO.1.dmnd"
+export CHECKM2DB="/scratch/project_2012151/DBs/uniref100.KO.1.dmnd"
 
 /projappl/project_2012151/tax_tools/bin/checkm2 predict \
     --input 06_GENOMES \
