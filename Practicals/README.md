@@ -35,12 +35,15 @@ Using read-based and assembly-based approaches, we will study the human gut micr
 * Type your password and hit "Enter"
 * In the following dialogue, type __yes__ and hit "Enter"
 
+###############################################################################
 **Notes for Windows user with VS Code**
 
 If you have problems in connecting, follow the following instructions:
 
 * When conneting to remote host open the config file that VS Cocde suggests  
 * Add a newline after your username with the following: `MACs hmac-sha2-512`  
+
+###############################################################################
 
 When the down left corner says `SSH:puhti.csc.fi`, you're connected.
 
