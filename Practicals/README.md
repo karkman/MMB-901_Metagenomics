@@ -145,7 +145,7 @@ module load biokit
 
 mkdir -p 01_DATA
 
-for ACC in `cat DF16_accessions.txt`; do
+for ACC in `cat 01_DATA/DF16_accessions.txt`; do
     fasterq-dump \
         --split-3 \
         --skip-technical \
