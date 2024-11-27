@@ -19,8 +19,9 @@
 | 10-11 | Read-based approaches | [Slides](../lectures/02_assembly-and-read-based.pdf) |
 | 11-12 | Read-based taxonomy | [Instructions](README.md#read-based-taxonomy) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
-| 10-11 | Metagenomic assembly | [Slides](../lectures/02_assembly-and-read-based.pdf) |
-| 13-16 | Metagenomic assembly | [Instructions](README.md#metagenome-assembly) |
+| 13-14 | Metagenomic assembly | [Slides](../lectures/02_assembly-and-read-based.pdf) |
+| 14-16 | Metagenomic assembly | [Instructions](README.md#metagenome-assembly) |
+
 ### Friday
 
 | Time | Description | Link |
@@ -46,8 +47,7 @@
     
 | Time | Description | Link |
 | --- | --- | -- |
-| 10-11 | Recap from Friday | [Slides](../lectures/04_Fri_recap.pdf) |
-| 11-12 | Manual binnning | [Instructions](README.md#interactive-use-and-binning) |
+| 10-12 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 | 12-13 | Lunch break | :plate_with_cutlery: |
 | 13-16 | Manual binnning cont'd | [Instructions](README.md#interactive-use-and-binning) |
 
