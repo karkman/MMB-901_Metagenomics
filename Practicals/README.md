@@ -147,7 +147,7 @@ mkdir -p 01_DATA
 
 for ACC in `cat DF16_accessions.txt`; do
     fasterq-dump \
-        --split-files \
+        --split-3 \
         --skip-technical \
         --outdir 01_DATA \
         --threads $SLURM_CPUS_PER_TASK \
@@ -235,6 +235,8 @@ less src/metaphlan.sh
 ```
 
 After that with the help of [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4#basic-usage), figure out the different options we need to define.  
+
+And before submitting the job, change the project number in the batch job script in two places.  
 
 And when you have a basic understanding what we are about to do, submit the job(s).  
 

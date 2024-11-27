@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node 1
 #SBATCH --cpus-per-task 12
 #SBATCH --mem 20G
-#SBATCH --account project_2009008
+#SBATCH --account project_XXXXXXX
 #SBATCH --array=1-9
 #SBATCH --gres=nvme:100
 
@@ -23,6 +23,6 @@ metaphlan \
     --unclassified_estimation \
     --sample_id ${SAMPLE_ACC} \
     --input_type fastq \
-    --bowtie2db /scratch/project_2009008/DB/metaphlan \
+    --bowtie2db /scratch/project_XXXXXXX/DBs/metaphlan \
     --output 05_TAXONOMY/${SAMPLE_ACC}.txt \
     --bowtie2out 05_TAXONOMY/${SAMPLE_ACC}.bowtie2.bz2 
