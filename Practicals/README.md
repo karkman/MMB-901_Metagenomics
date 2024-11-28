@@ -254,12 +254,12 @@ When all the metaphlan jobs are finished, we can go on with the data analysis of
 But before we can read the data into R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
 
 ```bash
-module load metaphlan/4.0.6
+module load metaphlan/4.1.1
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
 ```
 
-Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in browser interface of Rstudio running at Puhti.  
+Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Puhti using the browser interface of Rstudio.  
 
 After we have analysed the taxonomic profiles of the donor, we can combine the rest of the samples to our merged metaphlan table and run the analysis again.  
 First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
