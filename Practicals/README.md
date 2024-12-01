@@ -378,7 +378,13 @@ anvi-profile \
     --min-contig-length 5000
 ```
 
-After the file is ready, submit the jobs to the queue.  
+And before we can map the reads, we need to copy the correct data from the shared data folder.  
+
+```bash
+cp /scratch/project_2012151/Data/DF16/01_DATA/SRR*.fastq.gz 01_DATA/
+```
+
+After the data has been copied and the batch job script file is ready, you can submit the job.  
 
 ```bash
 sbatch src/mapping.sh
