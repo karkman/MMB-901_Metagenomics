@@ -384,7 +384,7 @@ And before we can map the reads, we need to copy the correct data from the share
 cp /scratch/project_2012151/Data/DF16/01_DATA/SRR*.fastq.gz 01_DATA/
 ```
 
-After the data has been copied and the batch job script file is ready, you can submit the job.  
+After the data has been copied and the array job script file is ready, you can submit the job(s).  
 
 ```bash
 sbatch src/mapping.sh
