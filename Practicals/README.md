@@ -352,7 +352,7 @@ Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `sr
 * Change the name of the job and the names of the log files
 * Change the time to 1 hour
 * Change the memory to 12G
-* Instead of metaphlan, load `anvio/7.1` module
+* Instead of metaphlan, load `anvio/8` module
 
 Remember that each of the array jobs reads the `DF16_accessions.txt` file and picks the right sample to analyse.  
 In more detail; each array has its own ID from 1-9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
