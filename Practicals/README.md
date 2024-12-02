@@ -355,7 +355,7 @@ Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `sr
 * Instead of metaphlan, load `anvio/8` module
 
 Remember that each of the array jobs reads the `DF16_accessions.txt` file and picks the right sample to analyse.  
-In more detail; each array has its own ID from 1-9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
+In more detail; each array has its own ID from 1–9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
 Make sure the path to that file is correct in the following line: `SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p DF16_accessions.txt)`  
 
 **Do not run** the following, but these are the mapping and profiling commands that you need to change in the file:  
