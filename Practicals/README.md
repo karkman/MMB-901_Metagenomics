@@ -306,7 +306,7 @@ And have a look at the output folder and inspect the results. QUAST manual will 
 We will use [anvi'o](http://www.anvio.org) for genome-resolved metagenomics. Anvi'o is a multi-omics analysis and visualization software. The website has multiple tutorials and comprehensive manual on how to use it with different data sets and for various analyses. We will cover only a small part of it.  
 There's also a [´omics vocabulary](https://anvio.org/vocabulary/), that can help you to understand some key terms and concepts in microbial 'omics.  
 
-Allocate computing resources. We'll need 40G of memory, 6 CPUs and 100G of temporary storage for at least 4 hours.  
+Allocate computing resources. We'll need 40G of memory, 6 CPUs and 100(G) of temporary storage for at least 4 hours.  
 
 ```bash
 # sinteractive
