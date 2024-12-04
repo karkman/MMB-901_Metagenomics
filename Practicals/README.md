@@ -435,7 +435,7 @@ anvi-rename-bins \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --collection-to-read PreCluster \
     --collection-to-write Bins \
-    --prefix DF16_Bins \
+    --prefix DF16 \
     --report-file 03_ANVIO/Bins_report.txt
 
 anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
