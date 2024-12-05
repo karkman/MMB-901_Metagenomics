@@ -448,7 +448,7 @@ We will use [CheckM2](https://github.com/chklovski/CheckM2) for assessing the qu
 
 But since there are probably a lot of low quality bins (low completeness), let's run `anvi-rename-bins` and `anvi-summarize` once more and ask anvi'o to mark all bins it thinks are good quality. This way we can reduce the amount of bins we need to analyse and everything will be a bit faster. We will use a bit more strict cut-off for the completion to concentrate only on the high-quality MAGs.  
 
-Allocate resources for the job. You will need the default resource for 30 min.  
+Allocate resources for the job. You will need 10G of memory and 30 min.  
 
 ```bash
 sinteractive -A project_2012151 -t 00:30:00
