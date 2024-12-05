@@ -451,7 +451,7 @@ But since there are probably a lot of low quality bins (low completeness), let's
 Allocate resources for the job. You will need 10G of memory and 30 min.  
 
 ```bash
-sinteractive -A project_2012151 -t 00:30:00
+sinteractive -A project_2012151 -t 00:30:00 -m 10G
 ```
 
 ```bash
