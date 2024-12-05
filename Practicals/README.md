@@ -553,7 +553,7 @@ sinteractive -A project_2012151 ...
 ```bash
 /projappl/project_2012151/bakta/bin/bakta \
     06_GENOMES/GENOME_BIN.fa  \
-    --db /scratch/project_2012151/DB/bakta/ \
+    --db /scratch/project_2012151/DBs/bakta/ \
     --skip-pseudo \
     --skip-sorf \
     --prefix GENOME_NAME \
