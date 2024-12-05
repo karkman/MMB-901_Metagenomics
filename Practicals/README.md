@@ -533,6 +533,7 @@ export GTDBTK_DATA_PATH="/scratch/project_2012151/DBs/release220/"
     --extension fa \
     --skip_ani_screen \
     --cpus $SLURM_CPUS_PER_TASK \
+    --pplacer_cpus 1 \
     --scratch_dir $LOCAL_SCRATCH \
     --tmpdir $LOCAL_SCRATCH
 ```
