@@ -596,7 +596,7 @@ Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make
 mkdir Data
 ```
 
-Make an array job that downloads the read files for each accession with `fasterq-dump` and also compresses them with `pigz`. Use the metaphaln script as an example and the same commands we used to download the donor metagenomes.  
+Make an array job that downloads the read files for each accession with `fasterq-dump` and also compresses them with `pigz`. Use the metaphlan script as an example and the same commands we used to download the donor metagenomes.  
 
 ```bash
 sbatch src/YOUR_ARRAY_SCRIPT.sh
