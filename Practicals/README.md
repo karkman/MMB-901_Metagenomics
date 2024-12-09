@@ -610,7 +610,7 @@ Write the output files to a new folder called `Genomes` in our `07_RECIPIENTS` f
 ```bash
 mkdir Genomes
 
-module load anvio/7.1
+module load anvio/8
 
 anvi-script-process-genbank \
     -i PATH/TO/GENOME_NAME.gbff \
@@ -754,7 +754,7 @@ __config.json:__
 When all the files have been created, check that everything is formatted correctly by doing a dry run.  
 
 ```bash
-module load anvio/7.1
+module load anvio/8
 anvi-run-workflow --workflow metagenomics --config-file config.json --dry-run
 ```
 
@@ -764,7 +764,7 @@ No matter which way you choose, you will need 12 CPUs, 50G of memory and 2 hours
 And the commands to run the workflow are below. Make sure you run it inside the `07_RECIPIENTS` folder.  
 
 ```bash
-module load anvio/7.1
+module load anvio/8
 anvi-run-workflow --workflow metagenomics --config-file config.json
 ```
 
@@ -810,6 +810,8 @@ done
 Then we can import the resulting file `semibin_collection.txt` to anvi'o.  
 
 ```bash
+module load anvio/8
+
 anvi-import-collection \
     -C Semibin2 \
     -c 03_ANVIO/CONTIGS.db \
