@@ -590,7 +590,7 @@ TF45
 Find all accession numbers for these subjects from SRA and write them down. 
 You should have 12 read accessions to download.  
 
-Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you download them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
+Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you store them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
 
 ```bash
 mkdir Data
