@@ -642,7 +642,7 @@ TF13_BL_FMT     Data/SRR11941661_1.fastq.gz    Data/SRR11941661_2.fastq.gz
 TF13_6wk_FMT    Data/SRR11941662_1.fastq.gz    Data/SRR11941662_2.fastq.gz
 TF13_26wk_FMT   Data/SRR11941663_1.fastq.gz    Data/SRR11941663_2.fastq.gz
 TF29_BL_FMT     Data/SRR11941593_1.fastq.gz    Data/SRR11941593_2.fastq.gz
-TF29_6WK_FMT    Data/SRR11941594_1.fastq.gz    Data/SRR11941594_2.fastq.gz
+TF29_6wk_FMT    Data/SRR11941594_1.fastq.gz    Data/SRR11941594_2.fastq.gz
 TF29_26wk_FMT   Data/SRR11941595_1.fastq.gz    Data/SRR11941595_2.fastq.gz
 TF29_12wk_FMT   Data/SRR11941596_1.fastq.gz    Data/SRR11941596_2.fastq.gz
 TF45_BL_placebo Data/SRR11941426_1.fastq.gz    Data/SRR11941426_2.fastq.gz
