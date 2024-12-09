@@ -746,7 +746,7 @@ __config.json:__
         "LOGS_DIR": "00_LOGS"
     },
     "max_threads": 12,
-    "config_version": "2",
+    "config_version": "3",
     "workflow_name": "metagenomics"
 }
 ```
