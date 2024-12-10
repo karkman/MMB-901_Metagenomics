@@ -817,7 +817,7 @@ anvi-import-collection \
     -c 03_ANVIO/CONTIGS.db \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --contigs-mode \
-    08_AUTOMATED_BINNING/semibin_collection.txt 
+    08_AUTOMATED_BINNING/contig_bins.tsv  
 ```
 
 Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be patient.  
