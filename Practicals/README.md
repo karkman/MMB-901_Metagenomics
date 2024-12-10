@@ -816,6 +816,6 @@ anvi-import-collection \
     08_AUTOMATED_BINNING/semibin_collection.txt
 ```
 
-Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be ***p a t i e n t***.  
+Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be ***p-a-t-i-e-n-t***.  
 
 You can also try to make similar figures from few bins as in the blog post [Visualizing the fate of contigs across metagenomic binning algorithms](https://merenlab.org/2020/01/02/visualizing-metagenomic-bins/). You need to export your own collection and semibin collection from anvi'o and then copy the script that was used to make those figures. And you also need to modify the script to read in the correct input files having the binning results. Read the blog post carefully and inspect the script and its comments.  
