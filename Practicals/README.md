@@ -145,7 +145,7 @@ module load biokit
 
 mkdir -p 01_DATA
 
-for ACC in `cat DF16_accessions.txt`; do
+for ACC in `cat 01_DATA/DF16_accessions.txt`; do
     fasterq-dump \
         --split-3 \
         --skip-technical \
@@ -254,12 +254,12 @@ When all the metaphlan jobs are finished, we can go on with the data analysis of
 But before we can read the data into R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
 
 ```bash
-module load metaphlan/4.0.6
+module load metaphlan/4.1.1
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
 ```
 
-Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in browser interface of Rstudio running at Puhti.  
+Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Puhti using the browser interface of Rstudio.  
 
 After we have analysed the taxonomic profiles of the donor, we can combine the rest of the samples to our merged metaphlan table and run the analysis again.  
 First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
@@ -306,7 +306,7 @@ And have a look at the output folder and inspect the results. QUAST manual will 
 We will use [anvi'o](http://www.anvio.org) for genome-resolved metagenomics. Anvi'o is a multi-omics analysis and visualization software. The website has multiple tutorials and comprehensive manual on how to use it with different data sets and for various analyses. We will cover only a small part of it.  
 There's also a [´omics vocabulary](https://anvio.org/vocabulary/), that can help you to understand some key terms and concepts in microbial 'omics.  
 
-Allocate computing resources. We'll need 40G of memory, 6 CPUs and 100G of temporary storage for at least 4 hours.  
+Allocate computing resources. We'll need 40G of memory, 6 CPUs and 100(G) of temporary storage for at least 4 hours.  
 
 ```bash
 # sinteractive
@@ -352,7 +352,11 @@ Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `sr
 * Change the name of the job and the names of the log files
 * Change the time to 1 hour
 * Change the memory to 12G
-* Instead of metaphlan, load `anvio/7.1` module
+* Instead of metaphlan, load `anvio/8` module
+
+Remember that each of the array jobs reads the `DF16_accessions.txt` file and picks the right sample to analyse.  
+In more detail; each array has its own ID from 1–9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
+Make sure the path to that file is correct in the following line: `SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p DF16_accessions.txt)`  
 
 **Do not run** the following, but these are the mapping and profiling commands that you need to change in the file:  
 
@@ -378,7 +382,13 @@ anvi-profile \
     --min-contig-length 5000
 ```
 
-After the file is ready, submit the jobs to the queue.  
+And before we can map the reads, we need to copy the correct data from the shared data folder.  
+
+```bash
+cp /scratch/project_2012151/Data/DF16/01_DATA/SRR*.fastq.gz 01_DATA/
+```
+
+After the data has been copied and the array job script file is ready, you can submit the job(s).  
 
 ```bash
 sbatch src/mapping.sh
@@ -425,7 +435,7 @@ anvi-rename-bins \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --collection-to-read PreCluster \
     --collection-to-write Bins \
-    --prefix DF16_Bins \
+    --prefix DF16 \
     --report-file 03_ANVIO/Bins_report.txt
 
 anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
@@ -438,10 +448,10 @@ We will use [CheckM2](https://github.com/chklovski/CheckM2) for assessing the qu
 
 But since there are probably a lot of low quality bins (low completeness), let's run `anvi-rename-bins` and `anvi-summarize` once more and ask anvi'o to mark all bins it thinks are good quality. This way we can reduce the amount of bins we need to analyse and everything will be a bit faster. We will use a bit more strict cut-off for the completion to concentrate only on the high-quality MAGs.  
 
-Allocate resources for the job. You will need the default resource for 30 min.  
+Allocate resources for the job. You will need 10G of memory and 30 min.  
 
 ```bash
-sinteractive -A project_2012151 -t 00:30:00
+sinteractive -A project_2012151 -t 00:30:00 -m 10G
 ```
 
 ```bash
@@ -523,6 +533,7 @@ export GTDBTK_DATA_PATH="/scratch/project_2012151/DBs/release220/"
     --extension fa \
     --skip_ani_screen \
     --cpus $SLURM_CPUS_PER_TASK \
+    --pplacer_cpus 1 \
     --scratch_dir $LOCAL_SCRATCH \
     --tmpdir $LOCAL_SCRATCH
 ```
@@ -542,7 +553,7 @@ sinteractive -A project_2012151 ...
 ```bash
 /projappl/project_2012151/bakta/bin/bakta \
     06_GENOMES/GENOME_BIN.fa  \
-    --db /scratch/project_2012151/DB/bakta/ \
+    --db /scratch/project_2012151/DBs/bakta/ \
     --skip-pseudo \
     --skip-sorf \
     --prefix GENOME_NAME \
@@ -579,13 +590,13 @@ TF45
 Find all accession numbers for these subjects from SRA and write them down. 
 You should have 12 read accessions to download.  
 
-Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you download them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
+Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you store them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
 
 ```bash
 mkdir Data
 ```
 
-Make an array job that downloads the read files for each accession with `fasterq-dump` and also compresses them with `pigz`. Use the metaphaln script as an example and the same commands we used to download the donor metagenomes.  
+Make an array job that downloads the read files for each accession with `fasterq-dump` and also compresses them with `pigz`. Use the metaphlan script as an example and the same commands we used to download the donor metagenomes.  
 
 ```bash
 sbatch src/YOUR_ARRAY_SCRIPT.sh
@@ -599,7 +610,7 @@ Write the output files to a new folder called `Genomes` in our `07_RECIPIENTS` f
 ```bash
 mkdir Genomes
 
-module load anvio/7.1
+module load anvio/8
 
 anvi-script-process-genbank \
     -i PATH/TO/GENOME_NAME.gbff \
@@ -631,7 +642,7 @@ TF13_BL_FMT     Data/SRR11941661_1.fastq.gz    Data/SRR11941661_2.fastq.gz
 TF13_6wk_FMT    Data/SRR11941662_1.fastq.gz    Data/SRR11941662_2.fastq.gz
 TF13_26wk_FMT   Data/SRR11941663_1.fastq.gz    Data/SRR11941663_2.fastq.gz
 TF29_BL_FMT     Data/SRR11941593_1.fastq.gz    Data/SRR11941593_2.fastq.gz
-TF29_6WK_FMT    Data/SRR11941594_1.fastq.gz    Data/SRR11941594_2.fastq.gz
+TF29_6wk_FMT    Data/SRR11941594_1.fastq.gz    Data/SRR11941594_2.fastq.gz
 TF29_26wk_FMT   Data/SRR11941595_1.fastq.gz    Data/SRR11941595_2.fastq.gz
 TF29_12wk_FMT   Data/SRR11941596_1.fastq.gz    Data/SRR11941596_2.fastq.gz
 TF45_BL_placebo Data/SRR11941426_1.fastq.gz    Data/SRR11941426_2.fastq.gz
@@ -735,7 +746,7 @@ __config.json:__
         "LOGS_DIR": "00_LOGS"
     },
     "max_threads": 12,
-    "config_version": "2",
+    "config_version": "3",
     "workflow_name": "metagenomics"
 }
 ```
@@ -743,7 +754,7 @@ __config.json:__
 When all the files have been created, check that everything is formatted correctly by doing a dry run.  
 
 ```bash
-module load anvio/7.1
+module load anvio/8
 anvi-run-workflow --workflow metagenomics --config-file config.json --dry-run
 ```
 
@@ -753,7 +764,7 @@ No matter which way you choose, you will need 12 CPUs, 50G of memory and 2 hours
 And the commands to run the workflow are below. Make sure you run it inside the `07_RECIPIENTS` folder.  
 
 ```bash
-module load anvio/7.1
+module load anvio/8
 anvi-run-workflow --workflow metagenomics --config-file config.json
 ```
 
@@ -806,7 +817,7 @@ anvi-import-collection \
     -c 03_ANVIO/CONTIGS.db \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --contigs-mode \
-    08_AUTOMATED_BINNING/contig_bins.tsv 
+    08_AUTOMATED_BINNING/contig_bins.tsv  
 ```
 
 Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be patient.  
