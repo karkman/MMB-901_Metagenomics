@@ -795,16 +795,12 @@ If you want to try multi-sample binning, re-run the previous command with all th
 
 After the binning is ready, you can run CheckM2 and GTDB-Tk for the resulting bins and compare the results to your own binning. Both tools accept the genome fasta files in compressed format (`.fa.gz`). Just specify the extension correctly.  
 
-We can also import the binning results to anvi'o and visually inspect whether we agree with Semibin2 or not. Unfortunately Semibi2 does not produce a file that could be easily imported to anvi'o as a bin collection. But we can create one by going thru each genome bin and printing the contig names and the bin they belong into a file that we can import to anvi'o.  
+We can also import the binning results to anvi'o and visually inspect whether we agree with Semibin2 or not.  
+Semibin2 produces a file (`contig_bins.tsv`) that has all the needed information, but the format is not exactly as anvi'o would wish.
+So we need to do some command line magic. Or in other words use `awk` to remove the first line and add a prefix to each bin name (as anvi'o does not accept only numbers as bin names).
 
 ```bash
-for file in 08_AUTOMATED_BINNING/output_bins/*.gz; do
-    bin=${file#08_AUTOMATED_BINNING/output_bins/SemiBin}
-    bin=${bin%.fa.gz}
-    for contig in $(zgrep ">" $file | sed 's/>//g');do
-        printf "%s\tBin%s\n" "$contig" "$bin" >> 08_AUTOMATED_BINNING/semibin_collection.txt
-    done
-done
+awk 'NR!=1 {print $1"\tSemibin2_"$2}' 08_AUTOMATED_BINNING/contig_bins.tsv > 08_AUTOMATED_BINNING/semibin_collection.txt
 ```
 
 Then we can import the resulting file `semibin_collection.txt` to anvi'o.  
@@ -817,7 +813,7 @@ anvi-import-collection \
     -c 03_ANVIO/CONTIGS.db \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --contigs-mode \
-    08_AUTOMATED_BINNING/contig_bins.tsv  
+    08_AUTOMATED_BINNING/semibin_collection.txt
 ```
 
 Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be patient.  
