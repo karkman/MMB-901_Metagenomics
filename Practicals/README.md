@@ -265,7 +265,7 @@ After we have analysed the taxonomic profiles of the donor, we can combine the r
 First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
-cp /scratch/project_2012151/Data/metaphlan/*.txt 05_TAXONOMY/
+cp /scratch/project_2012151/Data/Recipients/metaphlan/*.txt 05_TAXONOMY/
 
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
@@ -799,12 +799,14 @@ done
 Then we can import the resulting file `semibin_collection.txt` to anvi'o.  
 
 ```bash
+module load anvio/8
+
 anvi-import-collection \
     -C Semibin2 \
     -c 03_ANVIO/CONTIGS.db \
     -p 04_MAPPING/MERGED/PROFILE.db \
     --contigs-mode \
-    08_AUTOMATED_BINNING/semibin_collection.txt 
+    08_AUTOMATED_BINNING/contig_bins.tsv 
 ```
 
 Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be patient.  
