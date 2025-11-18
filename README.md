@@ -69,4 +69,4 @@ By completing this course, you will:
 ## Organizers and teachers
 
 :man_technologist: Antti Karkman, University of Helsinki  
-:man_technologist: Frillix Brocks,  University of Helsinki  
+:womman_technologist: Katariina Pärnänen,  University of Helsinki  
