@@ -207,7 +207,8 @@ Then the actual assembly will be done with [spades](https://github.com/ablab/spa
 CSC used SLURM job scheduling system for batch jobs.  
 
 Using AI, prepare a batch job script for running metagenomic assembly based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
-Also make sure the files names, folders and project number are correct.  
+You will need to request 12 CPUs, 150G of memory and 500G of local scratch space. The maximum time for the job is 16 hours.  
+Make sure the files names, folders, options and project number are correct.  
 Save the script as `src/spades.sh`.  
 
 You can also use [Puhti](https://docs.csc.fi/computing/running/creating-job-scripts-puhti/) and [spades](https://github.com/ablab/spades#sec3.2) manuals, to learn more.  
@@ -233,8 +234,10 @@ We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-base
 
 To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
 Again using AI, prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
-Save the script as `src/metaphlan.sh`.  
-You can also use [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4#basic-usage) to learn more.  
+You will need to request 12 CPUs, 20G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
+The version of metaphlan we will use is 4.2.4 and the database is located at `/scratch/project_2012151/DBs/metaphlan`.  
+Make sure the files names, folders, options and project number are correct and save the script as `src/metaphlan.sh`.  
+You can also use [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4.2#basic-usage) to learn more.  
 
 And when you have a basic understanding what we are about to do, submit the job(s).  
 
@@ -252,7 +255,7 @@ When all the metaphlan jobs are finished, we can go on with the data analysis of
 But before we can read the data into R, we need to combine the individual metaphlan outputs and extract the species level annotations from there.  
 
 ```bash
-module load metaphlan/4.1.1
+module load metaphlan/4.2.4
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
 ```
@@ -260,7 +263,7 @@ awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep
 Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Puhti using the browser interface of Rstudio.  
 
 After we have analysed the taxonomic profiles of the donor, we can combine the rest of the samples to our merged metaphlan table and run the analysis again.  
-First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
+First copy the taxonomic profiles of additional ~192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
 cp /scratch/project_2016640/GutBugsData/metaphlan/*.txt 05_TAXONOMY/
