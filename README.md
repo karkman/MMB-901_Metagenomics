@@ -31,7 +31,7 @@ __Recommended prerequisites:__
 
 ## Schedule
 
-The course will be from Monday 11th of November to Friday 15th of December at Viikki Campus.
+The course will be from Monday 24th of November to Friday 12th of December at Viikki Campus.
 
 __Practicals:__
   
