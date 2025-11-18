@@ -553,10 +553,15 @@ And of course allocate some resources: 4 CPUs, 20Gb of memory and 1 hour. It tak
 sinteractive -A project_2016640 ...
 ```
 
+Set the Bakta database path.  
+
+```bash
+export BAKTA_DB=/scratch/project_2016640/DBs/bakta/db
+```
+
 ```bash
 /projappl/project_2016640/bakta/bin/bakta \
     06_GENOMES/GENOME_BIN.fa  \
-    --db /scratch/project_2016640/DBs/bakta/ \
     --skip-pseudo \
     --skip-sorf \
     --prefix GENOME_NAME \
