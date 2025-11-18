@@ -37,13 +37,13 @@ __Practicals:__
   
 | Day | Time | Building | Class room |  
 | --- | --- | --- | :---: |  
-| Monday 24.11.    | 10-16   | :school: Infocenter | __K1087__   |
+| Monday 24.11.    | 10-16   | :office: Infocenter | __K1087__   |
 | Wednesday 26.11.  | 10-16   | :office: Infocenter | __K1087__  |
 | Friday 27.11.| 10-16   | :office: Infocenter | __K1048__  |
-| Monday 1.12.  | 10-16   | :school: Infocenter | __K1087__  |
+| Monday 1.12.  | 10-16   | :office: Infocenter | __K1087__  |
 | Wednesday 3.12.   | 10-16   | :office: Infocenter | __K1087__  |
 | Friday 5.12.   | 10-16   | :office: Infocenter | __K1048__  |
-| Monday 8.12.   | 10-16   | :school: Infocenter | __K1087__  |
+| Monday 8.12.   | 10-16   | :office: Infocenter | __K1087__  |
 | Wednesday 10.12.   | 10-16   | :office: Infocenter | __K1087__  |
 | Friday 12.12.   | 10-16   | :office: Infocenter | __K1048__  |
 
