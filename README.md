@@ -37,15 +37,15 @@ __Practicals:__
   
 | Day | Time | Building | Class room |  
 | --- | --- | --- | :---: |  
-| Monday 25.11.    | 10.15-15.45   | :school: Infocenter | __K1046__   |
-| Wednesday 27.11.  | 10.15-15.45   | :office: Biocenter 1 | __1401.4__  |
-| Friday 29.11.| 10.15-15.45   | :office: Biocenter 1 | __1401.4__  |
-| Monday 2.12.  | 10.15-15.45   | :school: Infocenter | __K1048__  |
-| Wednesday 4.12.   | 10.15-15.45   | :office: Biocenter 1 | __1041.4__  |
-| Thursday 5.12.   | 10.15-15.45   | :office: Biocenter 1 | __1401.4__  |
-| Monday 9.12.   | 10.15-15.45   | :school: Infocenter | __K1046__  |
-| Wednesday 11.12.   | 10.15-15.45   | :office: Biocenter 1 | __1401.4__  |
-| Friday 13.12.   | 10.15-15.45   | :office: Biocenter 1 | __1401.4__  |
+| Monday 24.11.    | 10-16   | :school: Infocenter | __K1087__   |
+| Wednesday 26.11.  | 10-16   | :office: Infocenter | __K1087__  |
+| Friday 27.11.| 10-16   | :office: Infocenter | __K1048__  |
+| Monday 1.12.  | 10-16   | :school: Infocenter | __K1087__  |
+| Wednesday 3.12.   | 10-16   | :office: Infocenter | __K1087__  |
+| Friday 5.12.   | 10-16   | :office: Infocenter | __K1048__  |
+| Monday 8.12.   | 10-16   | :school: Infocenter | __K1087__  |
+| Wednesday 10.12.   | 10-16   | :office: Infocenter | __K1087__  |
+| Friday 12.12.   | 10-16   | :office: Infocenter | __K1048__  |
 
 </table>  
 
