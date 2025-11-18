@@ -36,8 +36,7 @@ Using read-based and assembly-based approaches, we will study the human gut micr
 * Type your password and hit "Enter"
 * In the following dialogue, type __yes__ and hit "Enter"
 
-
-___Notes for Windows user with VS Code___
+### Notes for Windows user with VS Code
 
 _If you have problems in connecting, follow the following instructions:_
 
@@ -83,7 +82,7 @@ git clone https://github.com/karkman/MMB-901_Metagenomics.git
 ```
 
 Check what was downloaded and go to that folder. Then again check what is inside.  
-**All the scripts are to be run in this folder** (unless instructed otherwise).  
+__All the scripts are to be run in this folder__ (unless instructed otherwise).  
 
 ### Interactive use of Puhti
 
@@ -109,7 +108,7 @@ You always need to specify the accounting project (`-A`, `--account`). Otherwise
 Screen is a handy way to run things in the background without losing them when you logout or have connection problems. However, you have to be careful whn using screen, you can easily get lost.  
 And to make things even more complicated, the screen sessions are specific to each login node. And Puhti has at least 4 login nodes.  
 
-**Remember to always first open a screen session and only after that run `sinteractive`.**  
+__Remember to always first open a screen session and only after that run `sinteractive`.__  
 
 Mini manual for screen:  
 
@@ -160,10 +159,10 @@ done
 After the job has finished, check what you got? Make sure you have all 9 sequenicng experiments downloaded.  
 If not, check which ones are missing and download them individually with `fasterq-dump` using the run accession(s).  
 
-To save some space, we should compress the sequence files (`fasterq-dump` downloads uncompressed fastq files). 
+To save some space, we should compress the sequence files (`fasterq-dump` downloads uncompressed fastq files).  
 This is rather slow, so consider running it in screen. Before opening a screen, check how screen works from above.  
 
-```bash 
+```bash
 pigz -p $SLURM_CPUS_PER_TASK 01_DATA/*.fastq
 ```
 
@@ -361,7 +360,7 @@ Remember that each of the array jobs reads the `DF16_accessions.txt` file and pi
 In more detail; each array has its own ID from 1–9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
 Make sure the path to the accession file is correct in the following line: `SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p DF16_accessions.txt)`  
 
-**Do not run** the following, but these are the mapping and profiling commands that you need to change in the file:  
+__Do not run__ the following, but these are the mapping and profiling commands that you need to change in the file:  
 
 ```bash
 bowtie2 \
@@ -404,7 +403,7 @@ For this task you will need 40G of memory and about 30 min.
 
 ```bash
 anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering
- ```
+```
 
 ### Interactive use and binning
 
@@ -442,7 +441,7 @@ anvi-rename-bins \
     --report-file 03_ANVIO/Bins_report.txt
 
 anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
- ```
+```
 
 ## MAG QC and taxonomy
 
@@ -595,7 +594,7 @@ TF29
 TF45
 ```
 
-Find all accession numbers for these subjects from SRA and write them down. 
+Find all accession numbers for these subjects from SRA and write them down.  
 You should have 12 read accessions to download.  
 
 Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you store them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
@@ -824,6 +823,6 @@ anvi-import-collection \
     08_AUTOMATED_BINNING/semibin_collection.txt
 ```
 
-Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be ***p-a-t-i-e-n-t***.  
+Then open the interactive interface and from "Bins" tab, click "Load bin collection" and select the correct collection. This will take some time, so be ___p-a-t-i-e-n-t___.  
 
 You can also try to make similar figures from few bins as in the blog post [Visualizing the fate of contigs across metagenomic binning algorithms](https://merenlab.org/2020/01/02/visualizing-metagenomic-bins/). You need to export your own collection and semibin collection from anvi'o and then copy the script that was used to make those figures. And you also need to modify the script to read in the correct input files having the binning results. Read the blog post carefully and inspect the script and its comments.  
