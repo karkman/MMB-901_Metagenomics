@@ -53,9 +53,9 @@ When the down left corner says `SSH:puhti.csc.fi`, you're connected.
 
 ### Setting up the course folders
 
-The main course directory is located at `/scratch/project_2012151`.  
+The main course directory is located at `/scratch/project_2016640`.  
 There you will set up your own directory where you will perform all the tasks for this course.  
-Some of the tools needed on this course can be found from the course project applications folder `/projappl/project_2012151`.  
+Some of the tools needed on this course can be found from the course project applications folder `/projappl/project_2016640`.  
 
 First list all projects you're affiliated with in CSC.
 
@@ -73,7 +73,7 @@ mkdir $USER
 
 Check with `ls`; which folder did `mkdir $USER` create?
 
-This directory (`/scratch/project_2012151/your-user-name`) is your own working directory.  
+This directory (`/scratch/project_2016640/your-user-name`) is your own working directory.  
 Every time you log into Puhti, you should use `cd` to navigate to this directory.
 
 Go to your own folder and clone the course repository there.  
@@ -136,10 +136,11 @@ But before downloading, have a look at the documentation to understand the diffe
 Apply for resources. This doesn't take that long, so no real need for screen session.  
 
 ```bash
-sinteractive -A project_2012151 -m 10G -c 8
+sinteractive -A project_2016640 -m 10G -c 8
 ```
 
 As we have a list of accessions, we could either download each one by one, write them separately on the command line, or we can make a for loop that reads the accession file and downloads them one by one.  
+Or if you know how [parallel](https://www.gnu.org/software/parallel/parallel_tutorial.html) works, you can make a parallel version of the following. Just load also parallel module.  
 
 ```bash
 module load biokit
@@ -163,7 +164,7 @@ To save some space, we should compress the sequence files (`fasterq-dump` downlo
 This is rather slow, so consider running it in screen. Before opening a screen, check how screen works from above.  
 
 ```bash 
-pigz 01_DATA/*.fastq
+pigz -p $SLURM_CPUS_PER_TASK 01_DATA/*.fastq
 ```
 
 After this is done, check that each sequence file in the folder `01_DATA` has the ending `.gz`.  
@@ -178,7 +179,7 @@ We use two widely used programs that are pre-installed in Puhti:
 * [MultiQC](https://multiqc.info/) to combine the individual reports from FastQC.  
 
 ```bash
-cd /scratch/project_2012151/$USER/MMB-901_Metagenomics
+cd /scratch/project_2016640/$USER/MMB-901_Metagenomics
 mkdir 01_DATA/FASTQC
 
 module load biokit
@@ -203,11 +204,13 @@ cat 01_DATA/SRR*_2.fastq.gz > 01_DATA/DF16_2.fastq.gz
 ```
 
 Then the actual assembly will be done with [spades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we'll run it as batch job.  
-Have a look at the batch job file. Using [Puhti](https://docs.csc.fi/computing/running/creating-job-scripts-puhti/) and [spades](https://github.com/ablab/spades#sec3.2) manuals, find out which options do we need to define for the SLURM system and to spades.
+CSC used SLURM job scheduling system for batch jobs.  
 
-```bash
-less src/spades.sh
-```
+Using AI, prepare a batch job script for running metagenomic assembly based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
+Also make sure the files names, folders and project number are correct.  
+Save the script as `src/spades.sh`.  
+
+You can also use [Puhti](https://docs.csc.fi/computing/running/creating-job-scripts-puhti/) and [spades](https://github.com/ablab/spades#sec3.2) manuals, to learn more.  
 
 Then when you understand what we are about to do, submit the job with `sbatch`.  
 
@@ -229,15 +232,9 @@ While we wait for the assembly to finish, we can run the read-based taxonomic an
 We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic compposition in metagenomic data.  
 
 To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
-Have a look at the array job file and find out how array jobs are defined by comparing it to the spades batch job we ran earlier.  
-
-```bash
-less src/metaphlan.sh
-```
-
-After that with the help of [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4#basic-usage), figure out the different options we need to define.  
-
-And before submitting the job, change the project number in the batch job script in two places.  
+Again using AI, prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
+Save the script as `src/metaphlan.sh`.  
+You can also use [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4#basic-usage) to learn more.  
 
 And when you have a basic understanding what we are about to do, submit the job(s).  
 
@@ -266,7 +263,7 @@ After we have analysed the taxonomic profiles of the donor, we can combine the r
 First copy the taxonomic profiles of additional 192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
-cp /scratch/project_2012151/Data/Recipients/metaphlan/*.txt 05_TAXONOMY/
+cp /scratch/project_2016640/GutBugsData/metaphlan/*.txt 05_TAXONOMY/
 
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
@@ -283,7 +280,7 @@ QUAST can be found from Puhti, so just need to load the quast module.
 But first allocate some resources.  
 
 ```bash
-sinteractive --account project_2012151
+sinteractive --account project_2016640
 ```
 
 While you wait for the resources, have a look at the quast manual and read about the options were using.  
@@ -357,7 +354,7 @@ Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `sr
 
 Remember that each of the array jobs reads the `DF16_accessions.txt` file and picks the right sample to analyse.  
 In more detail; each array has its own ID from 1–9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
-Make sure the path to that file is correct in the following line: `SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p DF16_accessions.txt)`  
+Make sure the path to the accession file is correct in the following line: `SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p DF16_accessions.txt)`  
 
 **Do not run** the following, but these are the mapping and profiling commands that you need to change in the file:  
 
@@ -386,7 +383,7 @@ anvi-profile \
 And before we can map the reads, we need to copy the correct data from the shared data folder.  
 
 ```bash
-cp /scratch/project_2012151/Data/DF16/01_DATA/SRR*.fastq.gz 01_DATA/
+cp /scratch/project_2016640/Data/DF16/01_DATA/SRR*.fastq.gz 01_DATA/
 ```
 
 After the data has been copied and the array job script file is ready, you can submit the job(s).  
@@ -419,7 +416,7 @@ ANVIO_PORT=XXXX
 
 For the interactive work you will need around 10G of memory and only 1 CPU.  
 
-Then we need to set up the ports in VS Code. We'll go this thru together.  
+Then we need to set up the ports in VS Code. We'll go this thru together. If you're using other software for tunneling, figure out how to set the port forwarding there.  
 After the port has been set, you can run the `anvi-interactive` to launch the interactive interface.  
 
 ```bash
@@ -452,7 +449,7 @@ But since there are probably a lot of low quality bins (low completeness), let's
 Allocate resources for the job. You will need 10G of memory and 30 min.  
 
 ```bash
-sinteractive -A project_2012151 -t 00:30:00 -m 10G
+sinteractive -A project_2016640 -t 00:30:00 -m 10G
 ```
 
 ```bash
@@ -513,9 +510,9 @@ You can use the spades script as a template.
 ### MAG QC with CheckM2
 
 ```bash
-export CHECKM2DB="/scratch/project_2012151/DBs/uniref100.KO.1.dmnd"
+export CHECKM2DB="/scratch/project_2016640/DBs/CheckM2_database/uniref100.KO.1.dmnd"
 
-/projappl/project_2012151/tax_tools/bin/checkm2 predict \
+/projappl/project_2016640/tax_tools/bin/checkm2 predict \
     --input 06_GENOMES \
     --output-directory 06_GENOMES/checkm2 \
     --extension fa \
@@ -526,9 +523,9 @@ export CHECKM2DB="/scratch/project_2012151/DBs/uniref100.KO.1.dmnd"
 ### MAG taxonomy with GTDB-Tk
 
 ```bash
-export GTDBTK_DATA_PATH="/scratch/project_2012151/DBs/release220/"
+export GTDBTK_DATA_PATH="/scratch/project_2016640/DBs/release220/"
 
-/projappl/project_2012151/tax_tools/bin/gtdbtk classify_wf \
+/projappl/project_2016640/tax_tools/bin/gtdbtk classify_wf \
     --genome_dir 06_GENOMES \
     --out_dir 06_GENOMES/gtdbtk \
     --extension fa \
@@ -548,13 +545,13 @@ When you have picked two, annotate them both with Bakta using the following comm
 And of course allocate some resources: 4 CPUs, 20Gb of memory and 1 hour. It takes around 15-20 min per genome.  
 
 ```bash
-sinteractive -A project_2012151 ...
+sinteractive -A project_2016640 ...
 ```
 
 ```bash
-/projappl/project_2012151/bakta/bin/bakta \
+/projappl/project_2016640/bakta/bin/bakta \
     06_GENOMES/GENOME_BIN.fa  \
-    --db /scratch/project_2012151/DBs/bakta/ \
+    --db /scratch/project_2016640/DBs/bakta/ \
     --skip-pseudo \
     --skip-sorf \
     --prefix GENOME_NAME \
@@ -781,7 +778,7 @@ Allocate the resources or write a batch job script and use the following command
 Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
 
 ```bash
-/projappl/project_2012151/Semibin2/bin/SemiBin2 single_easy_bin \
+/projappl/project_2016640/Semibin2/bin/SemiBin2 single_easy_bin \
     --input-fasta 03_ANVIO/contigs2500.fasta \
     --input-bam 04_MAPPING/SRR11941565.bam \
     --environment human_gut \

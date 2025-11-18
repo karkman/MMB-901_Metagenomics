@@ -7,10 +7,10 @@
 #SBATCH --ntasks-per-node 1
 #SBATCH --cpus-per-task 12
 #SBATCH --mem 150G
-#SBATCH --account project_2009008
+#SBATCH --account project_XXXXXXX
 #SBATCH --gres=nvme:500
 
-cd /scratch/project_2009008/$USER/MMB-901_Metagenomics
+cd /scratch/project_XXXXXXX/$USER/MMB-901_Metagenomics
 mkdir -p 00_LOGS
 
 module load spades/3.15.5
