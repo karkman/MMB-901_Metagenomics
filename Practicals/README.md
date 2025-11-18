@@ -204,7 +204,7 @@ cat 01_DATA/SRR*_2.fastq.gz > 01_DATA/DF16_2.fastq.gz
 ```
 
 Then the actual assembly will be done with [spades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we'll run it as batch job.  
-CSC used SLURM job scheduling system for batch jobs.  
+CSC uses SLURM job scheduling system for batch jobs.  
 
 Using AI, prepare a batch job script for running metagenomic assembly based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
 You will need to request 12 CPUs, 150G of memory and 500G of local scratch space. The maximum time for the job is 16 hours.  
@@ -229,13 +229,15 @@ And when it has started running, look at the output log file in `00_LOGS`.
 
 ## Read-based taxonomy
 
-While we wait for the assembly to finish, we can run the read-based taxonomic annotation for the donor samples. And later combine some ready-made output files to compare the recipients to the donor.  
+Next we run the read-based taxonomic annotation for the donor samples. And later combine some ready-made output files to compare the recipients to the donor.  
 We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic compposition in metagenomic data.  
 
-To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
-Again using AI, prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
+To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.  
+
+Use AI to prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
 You will need to request 12 CPUs, 20G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
-The version of metaphlan we will use is 4.2.4 and the database is located at `/scratch/project_2012151/DBs/metaphlan`.  
+The version of metaphlan we'll use is 4.2.4 and the database is located at `/scratch/project_2012151/DBs/metaphlan`.  
+
 Make sure the files names, folders, options and project number are correct and save the script as `src/metaphlan.sh`.  
 You can also use [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4.2#basic-usage) to learn more.  
 
@@ -526,7 +528,7 @@ export CHECKM2DB="/scratch/project_2016640/DBs/CheckM2_database/uniref100.KO.1.d
 ### MAG taxonomy with GTDB-Tk
 
 ```bash
-export GTDBTK_DATA_PATH="/scratch/project_2016640/DBs/release220/"
+export GTDBTK_DATA_PATH="/scratch/project_2016640/DBs/release226/"
 
 /projappl/project_2016640/tax_tools/bin/gtdbtk classify_wf \
     --genome_dir 06_GENOMES \

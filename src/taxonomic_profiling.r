@@ -1,11 +1,12 @@
 
 ## Some setup for R packages needed for the analysis
-.libPaths(c("/projappl/project_2012151/project_rpackages_r440", .libPaths()))
+.libPaths(c("/projappl/project_2016640/project_rpackages_r451", .libPaths()))
 libpath <- .libPaths()[1]
 
 library(tidyverse)
 library(phyloseq)
 library(microViz)
+library(mia)
 
 ## setwd() sets the working directory. 
 ## Set it to your course directory. Use the full path and put it between the quotes.
