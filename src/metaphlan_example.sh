@@ -5,8 +5,8 @@
 #SBATCH --time 00:60:00
 #SBATCH --nodes 1
 #SBATCH --ntasks-per-node 1
-#SBATCH --cpus-per-task 12
-#SBATCH --mem 20G
+#SBATCH --cpus-per-task 8
+#SBATCH --mem 50G
 #SBATCH --account project_XXXXXXX
 #SBATCH --array=1-9
 #SBATCH --gres=nvme:100

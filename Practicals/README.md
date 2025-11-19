@@ -234,7 +234,7 @@ We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-base
 To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.  
 
 Use AI to prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
-You will need to request 12 CPUs, 20G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
+You will need to request 8 CPUs, 50G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
 The version of metaphlan we'll use is 4.2.4 and the database is located at `/scratch/project_2012151/DBs/metaphlan`.  
 
 Make sure the files names, folders, options and project number are correct and save the script as `src/metaphlan.sh`.  
