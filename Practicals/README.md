@@ -139,7 +139,7 @@ sinteractive -A project_2016640 -m 10G -c 8
 ```
 
 As we have a list of accessions, we could either download each one by one, write them separately on the command line, or we can make a for loop that reads the accession file and downloads them one by one.  
-Or if you know how [parallel](https://www.gnu.org/software/parallel/parallel_tutorial.html) works, you can make a parallel version of the following. Just load also parallel module.  
+Or if you know how [parallel](https://www.gnu.org/software/parallel/parallel_tutorial.html) works or want to ask AI, you can make a parallel version of the for-loop. Just load also parallel module.  
 
 ```bash
 module load biokit
@@ -152,6 +152,7 @@ for ACC in `cat 01_DATA/DF16_accessions.txt`; do
         --skip-technical \
         --outdir 01_DATA \
         --threads $SLURM_CPUS_PER_TASK \
+        --progress \
         $ACC
 done
 ```

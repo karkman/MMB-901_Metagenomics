@@ -15,7 +15,7 @@ module load metaphlan/4.2.4
 mkdir -p 00_LOGS
 mkdir -p 05_TAXONOMY
 
-SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p DF16_accessions.txt)
+SAMPLE_ACC=$(sed -n ${SLURM_ARRAY_TASK_ID}p 01_DATA/DF16_accessions.txt)
 
 metaphlan \
     01_DATA/${SAMPLE_ACC}_1.fastq.gz,01_DATA/${SAMPLE_ACC}_2.fastq.gz \
