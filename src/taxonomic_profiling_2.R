@@ -15,7 +15,7 @@ setwd("")
 metadata <- read.table("doc/metadata.txt", header = TRUE, row.names = 1)
 
 ## Read in the metaphlan file as a TreeSummarizedExperiment object
-tse <- mia::importMetaPhlAn("metaphlan.txt")
+tse <- mia::importMetaPhlAn("05_TAXONOMY/metaphlan.txt")
 
 ## Save the common samples
 common.samples <- intersect(colnames(tse), rownames(metadata))
