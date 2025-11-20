@@ -2,5 +2,6 @@
 *.pptx
 test_data/
 files202?/
+0[0-9]_*/
 .DS_Store
 to-do-before-course.md
