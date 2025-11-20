@@ -33,3 +33,7 @@ phy <- convertToPhyloseq(tse)
 ## we can visualise the results using
 ## the ord_explore function from microViz package
 phy %>% ord_explore()
+
+# Finally, save both objects for later use
+saveRDS(phy, file = "05_TAXONOMY/phyloseq_metaphlan4.rds")
+saveRDS(tse, file = "05_TAXONOMY/tse_metaphlan4.rds")
