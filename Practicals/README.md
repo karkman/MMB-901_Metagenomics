@@ -346,7 +346,7 @@ We used [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for th
 
 ```bash
 mkdir -p 04_MAPPING
-bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs
+bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs --threads $SLURM_CPUS_PER_TASK
 ```
 
 As we will be running the same job for all nine samples, the quickest way is to create an array job for the task.  
