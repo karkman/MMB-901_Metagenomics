@@ -135,7 +135,10 @@ But before downloading, have a look at the documentation to understand the diffe
 Apply for resources. This doesn't take that long, so no real need for screen session.  
 
 ```bash
-sinteractive -A project_2016640 -m 10G -c 8
+sinteractive -A project_2016640 -m 10G -c 8 -t 03:00:00
+```
+
+Then navigate to your course folder and run the following commands to download the data.
 ```
 
 As we have a list of accessions, we could either download each one by one, write them separately on the command line, or we can make a for loop that reads the accession file and downloads them one by one.  
@@ -150,6 +153,7 @@ for ACC in `cat 01_DATA/DF16_accessions.txt`; do
     fasterq-dump \
         --split-3 \
         --skip-technical \
+        --readids \
         --outdir 01_DATA \
         --threads $SLURM_CPUS_PER_TASK \
         --progress \
