@@ -499,7 +499,7 @@ __CheckM2:__
 
 __GTDB-Tk:__
 
-* 70G of memory
+* 120G of memory
 * 2 hours of time
 * 200G of local storage
 * 10 CPUs
