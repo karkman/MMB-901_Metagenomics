@@ -385,13 +385,7 @@ anvi-profile \
     --min-contig-length 5000
 ```
 
-And before we can map the reads, we need to copy the correct data from the shared data folder.  
-
-```bash
-cp /scratch/project_2016640/Data/DF16/01_DATA/SRR*.fastq.gz 01_DATA/
-```
-
-After the data has been copied and the array job script file is ready, you can submit the job(s).  
+After the script is ready, you can submit the job(s).  
 
 ```bash
 sbatch src/mapping.sh
