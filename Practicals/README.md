@@ -27,6 +27,13 @@ Using read-based and assembly-based approaches, we will study the human gut micr
 
 ## Setup
 
+### SSH key
+
+You need to set up SSH key before you can connect to CSC from your local machine using SSH.  
+If you're not sure whether you have done it, you can check it from [my.csc.fi](my.csc.fi) under your profile and SSH public keys.  
+
+In case you haven't set up SSH key, follow the instructions at [CSC webpages](https://docs.csc.fi/computing/connecting/ssh-keys/).  
+
 ### Connecting to Puhti with Visual Studio Code
 
 * Launch Visual Studio Code
