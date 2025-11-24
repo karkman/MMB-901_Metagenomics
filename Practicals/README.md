@@ -146,7 +146,6 @@ sinteractive -A project_2016640 -m 10G -c 8 -t 03:00:00
 ```
 
 Then navigate to your course folder and run the following commands to download the data.
-```
 
 As we have a list of accessions, we could either download each one by one, write them separately on the command line, or we can make a for loop that reads the accession file and downloads them one by one.  
 Or if you know how [parallel](https://www.gnu.org/software/parallel/parallel_tutorial.html) works or want to ask AI, you can make a parallel version of the for-loop. Just load also parallel module.  
