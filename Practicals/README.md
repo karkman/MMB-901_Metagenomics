@@ -151,6 +151,8 @@ As we have a list of accessions, we could either download each one by one, write
 Or if you know how [parallel](https://www.gnu.org/software/parallel/parallel_tutorial.html) works or want to ask AI, you can make a parallel version of the for-loop. Just load also parallel module.  
 
 ```bash
+export TMPDIR=.
+
 module load biokit
 
 mkdir -p 01_DATA
