@@ -160,7 +160,6 @@ for ACC in `cat 01_DATA/DF16_accessions.txt`; do
     fasterq-dump \
         --split-3 \
         --skip-technical \
-        --readids \
         --outdir 01_DATA \
         --threads $SLURM_CPUS_PER_TASK \
         --progress \
