@@ -166,7 +166,7 @@ for ACC in `cat 01_DATA/DF16_accessions.txt`; do
 done
 ```
 
-After the job has finished, check what you got? Make sure you have all 9 sequenicng experiments downloaded.  
+After the job has finished, check what you got? Make sure you have all 9 sequencing experiments downloaded.  
 If not, check which ones are missing and download them individually with `fasterq-dump` using the run accession(s).  
 
 To save some space, we should compress the sequence files (`fasterq-dump` downloads uncompressed fastq files).  
