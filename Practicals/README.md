@@ -272,9 +272,9 @@ module load metaphlan/4.2.4
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 ```
 
-Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Puhti using the browser interface of Rstudio.  
+Then follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Puhti using the browser interface of Rstudio.  
 
-After we have analysed the taxonomic profiles of the donor, we can combine the rest of the samples to our merged metaphlan table and run the analysis again.  
+After we have analysed the taxonomic profiles of the donor, we combine the rest of the samples to our merged metaphlan table and run the analysis again.  
 First copy the taxonomic profiles of additional ~192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
