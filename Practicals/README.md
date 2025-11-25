@@ -270,7 +270,6 @@ But before we can read the data into R, we need to combine the individual metaph
 ```bash
 module load metaphlan/4.2.4
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
-awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
 ```
 
 Then you can follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Puhti using the browser interface of Rstudio.  
@@ -282,7 +281,6 @@ First copy the taxonomic profiles of additional ~192 samples to the metaphlan ou
 cp /scratch/project_2016640/GutBugsData/metaphlan/*.txt 05_TAXONOMY/
 
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
-awk '$1 ~ "clade_name" || $1 ~ "s__" {print $0}' 05_TAXONOMY/metaphlan.txt |grep -v "t__" > 05_TAXONOMY/metaphlan_species.txt
 ```
 
 Then re-run the R part.  
