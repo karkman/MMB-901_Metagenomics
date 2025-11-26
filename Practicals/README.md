@@ -218,7 +218,8 @@ Then the actual assembly will be done with [spades](https://github.com/ablab/spa
 CSC uses SLURM job scheduling system for batch jobs.  
 
 Using AI, prepare a batch job script for running metagenomic assembly based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
-You will need to request 12 CPUs, 150G of memory and 500G of local scratch space. The maximum time for the job is 16 hours.  
+You will need to request 12 CPUs, 150G of memory and 500G of local scratch space. The maximum time for the job is 16 hours.
+Puhti uses a scheduling system called SLURM.
 Make sure the files names, folders, options and project number are correct.  
 Save the script as `src/spades.sh`.  
 
