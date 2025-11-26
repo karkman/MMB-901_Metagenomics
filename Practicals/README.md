@@ -214,8 +214,7 @@ cat 01_DATA/SRR*_1.fastq.gz > 01_DATA/DF16_1.fastq.gz
 cat 01_DATA/SRR*_2.fastq.gz > 01_DATA/DF16_2.fastq.gz
 ```
 
-Then the actual assembly will be done with [spades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we'll run it as batch job.  
-CSC uses SLURM job scheduling system for batch jobs.  
+Then the actual assembly will be done with [spades](https://github.com/ablab/spades) using the `--meta` option meant for metagenomic data. As this will take longer, we'll run it as batch job.   
 
 Using AI, prepare a batch job script for running metagenomic assembly based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
 You will need to request 12 CPUs, 150G of memory and 500G of local scratch space. The maximum time for the job is 16 hours.
@@ -244,7 +243,9 @@ And when it has started running, look at the output log file in `00_LOGS`.
 Next we run the read-based taxonomic annotation for the donor samples. And later combine some ready-made output files to compare the recipients to the donor.  
 We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic compposition in metagenomic data.  
 
-To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.  
+To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.
+
+CSC uses SLURM job scheduling system for batch jobs. 
 
 Use AI to prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
 You will need to request 8 CPUs, 50G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
