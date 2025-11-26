@@ -244,10 +244,11 @@ Next we run the read-based taxonomic annotation for the donor samples. And later
 We'll use [metaphlan4](https://github.com/biobakery/MetaPhlAn) for the read-based taxonomic annotation. Metaphlan uses marker genes to profile taxonomic compposition in metagenomic data.  
 
 To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.  
+CSC uses SLURM job scheduling system for array jobs.  
 
 Use AI to prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
-You will need to request 8 CPUs, 50G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
-The version of metaphlan we'll use is 4.2.4 and the database is located at `/scratch/project_2012151/DBs/metaphlan`.  
+The You will need to request 8 CPUs, 50G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
+The version of metaphlan we'll use is 4.2.4 and the database is located at `/scratch/project_2016640/DBs/metaphlan`.  
 
 Make sure the files names, folders, options and project number are correct and save the script as `src/metaphlan.sh`.  
 You can also use [metaphlan4 documentation](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-4.2#basic-usage) to learn more.  
