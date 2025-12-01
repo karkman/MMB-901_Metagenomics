@@ -428,6 +428,9 @@ ANVIO_PORT=XXXX
 For the interactive work you will need around 10G of memory and only 1 CPU.  
 
 Then we need to set up the ports in VS Code. We'll go this thru together. If you're using other software for tunneling, figure out how to set the port forwarding there.  
+
+Forward the port in VS Code under PORTS tab as follows: `NODEID.bullx:PORT`  
+
 After the port has been set, you can run the `anvi-interactive` to launch the interactive interface.  
 
 ```bash
