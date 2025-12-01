@@ -34,6 +34,8 @@ If you're not sure whether you have done it, you can check it from [my.csc.fi](m
 
 In case you haven't set up SSH key, follow the instructions at [CSC webpages](https://docs.csc.fi/computing/connecting/ssh-keys/).  
 
+__Save the SSH key to the default location.__  
+
 ### Connecting to Puhti with Visual Studio Code
 
 * Launch Visual Studio Code
