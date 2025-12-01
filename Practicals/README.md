@@ -437,7 +437,7 @@ After the port has been set, you can run the `anvi-interactive` to launch the in
 anvi-interactive -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT
 ```
 
-Other usefull command we will need during binnning.  
+Other usefull commands we will need during binnning.  
 
 ```bash
 anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT -C PreCluster -b Bin_1
