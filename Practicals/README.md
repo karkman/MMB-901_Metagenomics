@@ -556,7 +556,7 @@ After quality control and taxonomic annotation of all MAGs, we will choose two f
 
 When you have picked two, annotate them both with Bakta using the following command. Make sure the path to the genome is right (`GENOME_BIN`) and use the genus level annotation of the MAG as `GENOME_NAME`.  
 
-And of course allocate some resources: 4 CPUs, 20Gb of memory and 1 hour. It takes around 15-20 min per genome.  
+And of course allocate some resources: 4 CPUs, 20Gb of memory, 100(G) of temporary storage and 1 hour. It takes around 15-20 min per genome.  
 
 ```bash
 sinteractive -A project_2016640 ...
