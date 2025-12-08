@@ -607,7 +607,7 @@ TF45
 Find all accession numbers for these subjects from SRA and write them down.  
 You should have 12 read accessions to download.  
 
-Put the recipient data inside a `Data` folder in the `07_RECIPINTS` folder. Make sure you store them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
+Put the recipient data inside a `Data` folder in the `07_RECIPIENTS` folder. Make sure you store them as compressed files (`.gz`). And it might be a good idea to make an array batch job for this task.  
 
 ```bash
 mkdir Data
@@ -638,7 +638,7 @@ anvi-script-process-genbank \
 
 ### Anvi'o workflow
 
-We need to create three files for the workflow. One with the location of the genome files called `fasta.txt`. The second files has the paths to the read files called `samples.txt`. And the last file is a configuration file that has the instructions for what do run in the workflow. This file will be called `config.json`. Put all files in the `07_RECIPINTS` folder.  
+We need to create three files for the workflow. One with the location of the genome files called `fasta.txt`. The second files has the paths to the read files called `samples.txt`. And the last file is a configuration file that has the instructions for what do run in the workflow. This file will be called `config.json`. Put all files in the `07_RECIPIENTS` folder.  
 
 Examples of each file below. The first two have to be tab-separated. The third one is a JSON file and has a very different syntax. But this file you do not need to change.  
 
