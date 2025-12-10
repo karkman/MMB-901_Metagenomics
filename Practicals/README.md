@@ -797,7 +797,7 @@ Allocate the resources or write a batch job script and use the following command
 Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
 
 ```bash
-/projappl/project_2016640/Semibin2/bin/SemiBin2 single_easy_bin \
+/projappl/project_2016640/Semibin2.1/bin/SemiBin2 single_easy_bin \
     --input-fasta 03_ANVIO/contigs2500.fasta \
     --input-bam 04_MAPPING/SRR11941565.bam \
     --environment human_gut \
