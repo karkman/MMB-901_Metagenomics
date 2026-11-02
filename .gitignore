@@ -1,5 +1,7 @@
 .fastq.gz
 *.pptx
+*.svg
+*.png
 test_data/
 files202?/
 0[0-9]_*/
