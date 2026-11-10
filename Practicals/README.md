@@ -175,6 +175,8 @@ pigz -p $SLURM_CPUS_PER_TASK 01_DATA/*.fastq
 
 After this is done, check that each sequence file in the folder `01_DATA` has the ending `.gz`.  
 
+In case `fasterq-dump` gave errors and some of the files are missing, you can copy them from the course data folder (`/scratch/project_2022405/GutBugsData/Rawdata`).  
+
 ## Quality control
 
 Before running any real analyses, we should do quality control (QC) for the sequencing data.  
@@ -264,7 +266,7 @@ But before we can read the data into R, we need to combine the individual metaph
 
 ```bash
 module load metaphlan/4.2.4
-merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
+merge_metaphlan_tables.py 03_TAXONOMY/SRR*.txt > 03_TAXONOMY/metaphlan.txt
 ```
 
 Then follow the R instruction in the file `src/taxonomic_profiling.r` and run the analysis in Roihu using the browser interface of Rstudio.  
@@ -273,9 +275,9 @@ After we have analysed the taxonomic profiles of the donor, we combine the rest 
 First copy the taxonomic profiles of additional ~192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
-cp /scratch/project_2022405/GutBugsData/metaphlan/*.txt 05_TAXONOMY/
+cp /scratch/project_2022405/GutBugsData/metaphlan/*.txt 03_TAXONOMY/
 
-merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
+merge_metaphlan_tables.py 03_TAXONOMY/SRR*.txt > 03_TAXONOMY/metaphlan.txt
 ```
 
 Then re-run the R part.  
@@ -311,13 +313,14 @@ And have a look at the output folder and inspect the results. QUAST manual will 
 ## Genome-resolved metagenomics
 
 Instead of manual binning, we will use automatic binning software to reconstruct some of the original genomes (metagenome-assembled genomes, MAGs) in our donor samples.  
-The programs we will use are [Metabat](LINK) and [Semibin2](LINK). Both use the differential coverage information and the sequence composition of the contigs as the basis to cluster them into bins.  
+There are several different tools for automated binning and they all perform very differently (as you probably read in the blog post).  
+The programs we will use are [Metabat](LINK) and [Semibin2](https://github.com/BigDataBiology/SemiBin). Both use the differential coverage information and the sequence composition of the contigs as the basis to cluster them into bins.  
 There's also a [´omics vocabulary](https://anvio.org/vocabulary/), that can help you to understand some key terms and concepts in microbial 'omics.  
 
 ### Mapping
 
-To obtain the differential coverage information for each contig in our database, we will map the original reads from each sample individually to the formatted fasta file (contigs < 2500 nt removed) and make a single profile database from each formatted mappign output file.  
-We used [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for the mapping and the first step is to create an index of the fasta file.  
+To obtain the differential coverage information for each contig in our database, we will map the original reads from each sample individually to the assembly.  
+We use [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for the mapping and the first step is to create an index of the fasta file.  
 
 ```bash
 mkdir -p 04_MAPPING
@@ -348,8 +351,8 @@ bowtie2 \
     -S $TMPDIR/${SAMPLE_ACC}.sam
 
 samtools view -bS $TMPDIR/${SAMPLE_ACC}.sam > $TMPDIR/${SAMPLE_ACC}.bam
-samtools sort -o $TMPDIR/${SAMPLE_ACC}.sorted.bam $TMPDIR/${SAMPLE_ACC}.bam
-samtools index $TMPDIR/${SAMPLE_ACC}.sorted.bam
+samtools sort -o 04_MAPPING/${SAMPLE_ACC}.sorted.bam $TMPDIR/${SAMPLE_ACC}.bam
+samtools index 04_MAPPING/${SAMPLE_ACC}.sorted.bam
 ```
 
 After the script is ready, you can submit the job(s).  
@@ -362,58 +365,46 @@ sbatch src/mapping.sh
 
 INSTRUCTIONS HERE
 
+```bash
+05_BINNING/METABAT2/
+```
+
 ### Semibin2
 
-INSTRUCTIONS HERE
+
+Semibin2 uses deep learning in metagenomic binning and has pre-trained models for several different environments, including human gut. However, with multiple samples the pre-trained models cannot be used and we would need to train the model with our data. The model training takes some time, although it might be more accurate. Running Semibin2 with pre-trained model is a lot faster and we will prefer speed over accuracy on this course. In case we have time, we can try the multi-sample mode for our data.  
+
+We will use the same files we created and used in the manual binning with anvi'o. The job can be run interactively or as a batch job. You will need at least 6 CPUs, 50G of memory, 100G of local storage and many hours (to be sure this time).  
+Allocate the resources or write a batch job script and use the following command to run Semibin2.  
+
+Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
+
+```bash
+module load bio-apps/v202603
+module load py-semibin/2.6.0
+
+SemiBin2 single_easy_bin \
+    --input-fasta 02_ASSEMBLY/contigs.fasta \
+    --input-bam 04_MAPPING/*.bam \
+    --tmpdir $TMPDIR \
+    --threads $SLURM_CPUS_PER_TASK \
+    --output 05_BINNING/SEMIBIN2/
+```
+
+The outputs from Semibin2 will be written to `05_BINNING/SEMIBIN2/` and the folder will contain information about the bins, some log files and one folder with all the genome bins as compressed fasta files.  
+
+NOT SURE ABOUT THIS, COULD SOMEONE CHECK?  
+Semibin2 produces a file (`contig_bins.tsv`) that has all the needed information, but the format is not exactly as anvi'o would wish.
+So we need to do some command line magic. Or in other words use `awk` to remove the first line and add a prefix to each bin name (as anvi'o does not accept only numbers as bin names).
+
+```bash
+awk 'NR!=1 {print $1"\tSemibin2_"$2}' 08_AUTOMATED_BINNING/contig_bins.tsv > 08_AUTOMATED_BINNING/semibin_collection.txt
+```
 
 ## MAG QC and taxonomy
 
-When the binning is done, it's time to assess the quality of them and give a taxonomic annotation to each bin.  
+When the binning is done, it's time to assess the quality of the bins and give a taxonomic annotation to each bin.  
 We will use [CheckM2](https://github.com/chklovski/CheckM2) for assessing the quality of our MAGs and [GTDB-Tk](https://github.com/ecogenomics/gtdbtk) for the taxonomic annotation.  
-
-But since there are probably a lot of low quality bins (low completeness), let's run `anvi-rename-bins` and `anvi-summarize` once more and ask anvi'o to mark all bins it thinks are good quality. This way we can reduce the amount of bins we need to analyse and everything will be a bit faster. We will use a bit more strict cut-off for the completion to concentrate only on the high-quality MAGs.  
-
-Allocate resources for the job. You will need 10G of memory and 30 min.  
-
-```bash
-sinteractive -A project_2022405 -t 00:30:00 -m 10G
-```
-
-```bash
-anvi-rename-bins \
-    -c 03_ANVIO/CONTIGS.db \
-    -p 04_MAPPING/MERGED/PROFILE.db \
-    --collection-to-read \ # The latest collection you have goes here, before the "\"
-    --collection-to-write MAGs \
-    --call-MAGs \
-    --min-completion-for-MAG 90 \
-    --max-redundancy-for-MAG 10 \
-    --prefix DF16 \
-    --report-file 03_ANVIO/MAG_report.txt
-
-anvi-summarize \
-    -c 03_ANVIO/CONTIGS.db \
-    -p 04_MAPPING/MERGED/PROFILE.db \
-    -o 03_ANVIO/SUMMARY_MAGs \
-    -C MAGs
-```
-
-Now you can release the resources.  
-
-```bash
-exit
-```
-
-### MAG folder
-
-Now each bin that had completeness and redundancy (according to anvi'o) over 70 % and under 10 %, respectively, will have "MAG" in its name. For example `DF16_MAG_00001`. So we can only pick those for further analyses. We will make a folder with softlinks to all of our MAGs and then analyze only these with CheckM2 and GTDB-Tk.  
-
-```bash
-mkdir -p 06_GENOMES
-cd 06_GENOMES
-ln -s ../03_ANVIO/SUMMARY_MAGs/bin_by_bin/*MAG*/*MAG*-contigs.fa ./
-cd ..
-```
 
 The MAG quality control and taxonomic annotation will be run as a batch job to be more efficient and just for practice. Run them as separate batch jobs and start with the one that probably takes longer.  
 Below you can find the scripts. Resources for the batch jobs are as follows:
@@ -434,14 +425,17 @@ __GTDB-Tk:__
 
 You can use the spades script as a template.
 
+Remember to analyse the bins from each binning method separately and make sure you have the extensions correct for each method (for example wth Semibin2 it's `.fa.gz`).  
+
 ### MAG QC with CheckM2
 
 ```bash
-export CHECKM2DB="/scratch/project_2022405/DBs/CheckM2_database/uniref100.KO.1.dmnd"
+module load  bio-apps/v202603
+module load checkm2/1.1.0
 
-/projappl/project_2022405/tax_tools/bin/checkm2 predict \
-    --input 06_GENOMES \
-    --output-directory 06_GENOMES/checkm2 \
+checkm2 predict \
+    --input BIN_FOLDER \
+    --output-directory BIN_FOLDER/checkm2 \
     --extension fa \
     --tmpdir $TMPDIR \
     --threads $SLURM_CPUS_PER_TASK
@@ -450,11 +444,12 @@ export CHECKM2DB="/scratch/project_2022405/DBs/CheckM2_database/uniref100.KO.1.d
 ### MAG taxonomy with GTDB-Tk
 
 ```bash
-export GTDBTK_DATA_PATH="/scratch/project_2022405/DBs/release226/"
+module load  bio-apps/v202603
+module load py-gtdbtk/2.7.2
 
-/projappl/project_2022405/tax_tools/bin/gtdbtk classify_wf \
-    --genome_dir 06_GENOMES \
-    --out_dir 06_GENOMES/gtdbtk \
+gtdbtk classify_wf \
+    --genome_dir BIN_FOLDER \
+    --out_dir BIN_FOLDER/gtdbtk \
     --extension fa \
     --skip_ani_screen \
     --cpus $SLURM_CPUS_PER_TASK \
@@ -463,41 +458,26 @@ export GTDBTK_DATA_PATH="/scratch/project_2022405/DBs/release226/"
     --tmpdir $TMPDIR
 ```
 
-## MAG annotation
+## DASTOOL or COMPARISON OF BINNING METHODS??
 
-After quality control and taxonomic annotation of all MAGs, we will choose two for strain engraftment analysis. The Fig. 2 in the original publication can help you choose MAGs that could be of interest. We want to determine whether the donor strains have colonised the recipients. We can talk together which ones you could choose, but keep in mind that we might not have good quality genomes from all of those, so you need to use the CheckM2 and GTDB-Tk results to verify what you have.  
+If DASTOOL, then outputs from it will be used in the next step. 
+If we just compare methods, we could count the number of high-quality bins from each method and choose the better. 
+Can be done with simple `awk| wc -l` one-liner.
 
-When you have picked two, annotate them both with Bakta using the following command. Make sure the path to the genome is right (`GENOME_BIN`) and use the genus level annotation of the MAG as `GENOME_NAME`.  
+THEN WE NEED MAG DEREPLICATION, MAPPING OF RECIPIENT READS TO MAGs, AND STRAIN ENGRAFTMENT ANALYSIS.
 
-And of course allocate some resources: 4 CPUs, 20Gb of memory, 100(G) of temporary storage and 1 hour. It takes around 15-20 min per genome.  
+## Phage part
 
-```bash
-sinteractive -A project_2022405 ...
-```
-
-Set the Bakta database path.  
+INSTRUCTIONS HERE
 
 ```bash
-export BAKTA_DB=/scratch/project_2022405/DBs/bakta/db
+06_PHAGES/
 ```
 
-```bash
-/projappl/project_2022405/bakta/bin/bakta \
-    06_GENOMES/GENOME_BIN.fa  \
-    --skip-pseudo \
-    --skip-sorf \
-    --prefix GENOME_NAME \
-    --locus GENOME_NAME \
-    --threads $SLURM_CPUS_PER_TASK \
-    --output 06_GENOMES/GENOME_NAME 
-```
+## Strain engraftment with inStrain
 
-## Strain engraftment
-
-The next step is to determine the strain engraftment of the selected MAGs from the donor to few selected recipients.  
-We will use anvio workflows, which is a snakemake wrapper for anvi'o. You can learn more about anvi'o workflows here: [https://merenlab.org/2018/07/09/anvio-snakemake-workflows](https://merenlab.org/2018/07/09/anvio-snakemake-workflows) and about Snakemake, the workflow manager used with anvi'o workflows, from here: [https://snakemake.readthedocs.io/en/stable/](https://snakemake.readthedocs.io/en/stable/).  
-
-Before we can run the workflow, we need to fetch the recipient data, pre-process the annotated genome files (Genbank files from Bakta) for anvi'o and prepare few files for the workflow.  
+The next step is to determine the strain engraftment of the donor MAGs to few selected recipients.  
+Before we can run the workflow, we need to fetch the recipient data and map it against the donor MAGs.  
 
 First make a whole new folder for all this. And put all output files and files we make in this folder.
 
@@ -532,37 +512,16 @@ Make an array job that downloads the read files for each accession with `fasterq
 sbatch src/YOUR_ARRAY_SCRIPT.sh
 ```
 
-### Process Genbank files
+And of there were errors or problems with the download, you can copy the files from the course data folder (`/scratch/project_2022405/GutBugsData/Rawdata`).
 
-Process both selected MAGs. The input is the genbank file (`.gbff`) in the bakta output folder.  
-Write the output files to a new folder called `Genomes` in our `07_RECIPIENTS` folder. Add the genome name as the prefix (option `-O`).  
-
-```bash
-mkdir Genomes
-
-module load anvio/8
-
-anvi-script-process-genbank \
-    -i PATH/TO/GENOME_NAME.gbff \
-    -O PATH/TO/GENOME_NAME \
-    --annotation-source bakta \
-    --annotation-version 1.5.1
-```
-
-### Anvi'o workflow
-
-We need to create three files for the workflow. One with the location of the genome files called `fasta.txt`. The second files has the paths to the read files called `samples.txt`. And the last file is a configuration file that has the instructions for what do run in the workflow. This file will be called `config.json`. Put all files in the `07_RECIPIENTS` folder.  
-
-Examples of each file below. The first two have to be tab-separated. The third one is a JSON file and has a very different syntax. But this file you do not need to change.  
-
-__fasta.txt:__
+### Mapping of recipient reads to donor MAGs
 
 ```bash
-name    path    external_gene_calls gene_functional_annotation
-GENOME_NAME Genomes/GENOME_NAME-contigs.fa   Genomes/GENOME_NAME-external-gene-calls.txt  Genomes/GENOME_NAME-external-functions.txt
-GENOME_NAME Genomes/GENOME_NAME-contigs.fa   Genomes/GENOME_NAME-external-gene-calls.txt  Genomes/GENOME_NAME-external-functions.txt
+# we can use the same bowtie index
+# and a modified version of the mapping.sh script
 ```
 
+We might need this??  
 __samples.txt:__
 
 ```bash
@@ -581,157 +540,7 @@ TF45_26wk_placebo       Data/SRR11941486_1.fastq.gz    Data/SRR11941486_2.fastq.
 TF45_12wk_placebo       Data/SRR11941487_1.fastq.gz    Data/SRR11941487_2.fastq.gz
 ```
 
-__config.json:__  
 
-```bash
-{
-    "fasta_txt": "fasta.txt",
-    "anvi_gen_contigs_database": {
-        "--project-name": "{group}",
-        "--description": "",
-        "--skip-gene-calling": "",
-        "--ignore-internal-stop-codons": "",
-        "--skip-mindful-splitting": "",
-        "--contigs-fasta": "",
-        "--split-length": "",
-        "--kmer-size": "",
-        "--skip-predict-frame": "",
-        "--prodigal-translation-table": "",
-        "threads": 6
-    },
-    "anvi_run_hmms": {
-        "run": true,
-        "threads": 6,
-        "--also-scan-trnas": true,
-        "--installed-hmm-profile": "",
-        "--hmm-profile-dir": ""
-    },
-    "samples_txt": "samples.txt",
-    "bowtie": {
-        "additional_params": "--no-unal",
-        "threads": 4
-    },
-    "samtools_view": {
-        "additional_params": "-F 4",
-        "threads": 2
-    },
-    "anvi_profile": {
-        "threads": 4,
-        "--sample-name": "{sample}",
-        "--overwrite-output-destinations": true,
-        "--report-variability-full": "",
-        "--skip-SNV-profiling": "",
-        "--profile-SCVs": "",
-        "--description": "",
-        "--skip-hierarchical-clustering": "",
-        "--distance": "",
-        "--linkage": "",
-        "--min-contig-length": "",
-        "--min-mean-coverage": "",
-        "--min-coverage-for-variability": "",
-        "--cluster-contigs": "",
-        "--contigs-of-interest": "",
-        "--queue-size": "",
-        "--write-buffer-size-per-thread": "",
-        "--max-contig-length": ""
-    },
-    "anvi_merge": {
-        "--sample-name": "{group}",
-        "--overwrite-output-destinations": true,
-        "--description": "",
-        "--skip-hierarchical-clustering": "",
-        "--enforce-hierarchical-clustering": true,
-        "--distance": "",
-        "--linkage": "",
-        "threads": "6"
-    },
-    "import_percent_of_reads_mapped": {
-        "run": true,
-        "threads": ""
-    },
-    "annotate_contigs_database": {
-        "threads": ""
-    },
-    "bowtie_build": {
-        "additional_params": "",
-        "threads": 6
-    },
-    "anvi_init_bam": {
-        "threads": 4
-    },
-    "references_mode": "true",
-    "all_against_all": "true",
-    "kraken_txt": "",
-    "collections_txt": "",
-    "output_dirs": {
-        "FASTA_DIR": "02_FASTA",
-        "CONTIGS_DIR": "03_CONTIGS",
-        "QC_DIR": "01_QC",
-        "MAPPING_DIR": "04_MAPPING",
-        "PROFILE_DIR": "05_ANVIO_PROFILE",
-        "MERGE_DIR": "06_MERGED",
-        "TAXONOMY_DIR": "07_TAXONOMY",
-        "SUMMARY_DIR": "08_SUMMARY",
-        "SPLIT_PROFILES_DIR": "09_SPLIT_PROFILES",
-        "LOGS_DIR": "00_LOGS"
-    },
-    "max_threads": 12,
-    "config_version": "3",
-    "workflow_name": "metagenomics"
-}
-```
-
-When all the files have been created, check that everything is formatted correctly by doing a dry run.  
-
-```bash
-module load anvio/8
-anvi-run-workflow --workflow metagenomics --config-file config.json --dry-run
-```
-
-Then when all the files are ready and correctly formatted, you can either create a batch file to run the workflow or do it interactively.  
-No matter which way you choose, you will need 12 CPUs, 50G of memory and 2 hours.  
-
-And the commands to run the workflow are below. Make sure you run it inside the `07_RECIPIENTS` folder.  
-
-```bash
-module load anvio/8
-anvi-run-workflow --workflow metagenomics --config-file config.json
-```
-
-## Automatic binning
-
-There are several different tools for automated binning and they all perform very differently (as you probably read in the blog post). We will use [SemiBin2](https://github.com/BigDataBiology/SemiBin) for the automated binning.  
-
-Semibin2 uses deep learning in metagenomic binning and has pre-trained models for several different environments, including human gut. However, with multiple samples the pre-trained models cannot be used and we would need to train the model with our data. The model training takes some time, although it might be more accurate. Running Semibin2 with pre-trained model is a lot faster and we will prefer speed over accuracy on this course. In case we have time, we can try the multi-sample mode for our data.  
-
-We will use the same files we created and used in the manual binning with anvi'o. The job can be run interactively or as a batch job. You will need at least 6 CPUs, 50G of memory, 100G of local storage and many hours (to be sure this time). My test run took 35 min.  
-Allocate the resources or write a batch job script and use the following command to run Semibin2.  
-
-Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
-
-```bash
-/projappl/project_2022405/Semibin2/bin/SemiBin2 single_easy_bin \
-    --input-fasta 03_ANVIO/contigs2500.fasta \
-    --input-bam 04_MAPPING/SRR11941565.bam \
-    --environment human_gut \
-    --tmpdir $TMPDIR \
-    --threads $SLURM_CPUS_PER_TASK \
-    --output 08_AUTOMATED_BINNING
-```
-
-The outputs from Semibin2 will be written to `08_AUTOMATED_BINNING` and the folder will contain information about the bins, some log files and one folder with all the genome bins as compressed fasta files.  
-
-If you want to try multi-sample binning, re-run the previous command with all the BAM-files and remove the option `--environment human_gut`. Also remember to change the name of the output folder. This will take significantly longer, so make a batch job with more time and more cores (10-16 CPUs).  
-
-After the binning is ready, you can run CheckM2 and GTDB-Tk for the resulting bins and compare the results to your own binning. Both tools accept the genome fasta files in compressed format (`.fa.gz`). Just specify the extension correctly.  
-
-We can also import the binning results to anvi'o and visually inspect whether we agree with Semibin2 or not.  
-Semibin2 produces a file (`contig_bins.tsv`) that has all the needed information, but the format is not exactly as anvi'o would wish.
-So we need to do some command line magic. Or in other words use `awk` to remove the first line and add a prefix to each bin name (as anvi'o does not accept only numbers as bin names).
-
-```bash
-awk 'NR!=1 {print $1"\tSemibin2_"$2}' 08_AUTOMATED_BINNING/contig_bins.tsv > 08_AUTOMATED_BINNING/semibin_collection.txt
-```
 
 Then we can import the resulting file `semibin_collection.txt` to anvi'o.  
 
