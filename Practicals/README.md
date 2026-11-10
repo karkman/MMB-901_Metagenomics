@@ -273,7 +273,7 @@ After we have analysed the taxonomic profiles of the donor, we combine the rest 
 First copy the taxonomic profiles of additional ~192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
-cp /scratch/project_2022405/DATA/metaphlan/*.txt 05_TAXONOMY/
+cp /scratch/project_2022405/GutBugsData/metaphlan/*.txt 05_TAXONOMY/
 
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 ```
