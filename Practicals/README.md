@@ -241,12 +241,11 @@ You can read about the basic usage from here: [metaphlan4 documentation](https:/
 
 To make things run a bit faster, we will run metaphlan as an [array job](https://docs.csc.fi/computing/running/array-jobs/). In a nutshell, all jobs will be run in parallel as individual jobs. This is a handy way to do the same thing for several files that are independent.  
 
-Use CSC documentation and metaphlan manual (and/or AI) to prepare a batch job script for running metaphlan4 as an array job based on this information. Ask for a detailed description of the file content and the different options, so you understand what is going on.  
+Use CSC documentation and metaphlan manual (and/or AI) to prepare a batch job script for running metaphlan4 as an array job based on this information. If using AI, ask for a detailed description of the file content and the different options, so you understand what is going on.  
 The You will need to request 8 CPUs, 50G of memory and 100G of local scratch space. The maximum time for the job is 1 hour.  
 The version of metaphlan we'll use is 4.2.4 and it is installed on Roihu under the module `py-metaphlan/4.2.4` (needs also `bio-apps` module).
 
 Make sure the files names, folders, options and project number are correct and save the script as `src/metaphlan.sh`.  
-
 
 And when you have a basic understanding what we are about to do, submit the job(s).  
 
@@ -274,7 +273,7 @@ After we have analysed the taxonomic profiles of the donor, we combine the rest 
 First copy the taxonomic profiles of additional ~192 samples to the metaphlan output folder and re-run the merge command above.  
 
 ```bash
-cp /scratch/project_2022405/GutBugsData/metaphlan/*.txt 05_TAXONOMY/
+cp /scratch/project_2022405/DATA/metaphlan/*.txt 05_TAXONOMY/
 
 merge_metaphlan_tables.py 05_TAXONOMY/SRR*.txt > 05_TAXONOMY/metaphlan.txt
 ```
@@ -311,47 +310,18 @@ And have a look at the output folder and inspect the results. QUAST manual will 
 
 ## Genome-resolved metagenomics
 
-We will use [anvi'o](http://www.anvio.org) for genome-resolved metagenomics. Anvi'o is a multi-omics analysis and visualization software. The website has multiple tutorials and comprehensive manual on how to use it with different data sets and for various analyses. We will cover only a small part of it.  
+Instead of manual binning, we will use automatic binning software to reconstruct some of the original genomes (metagenome-assembled genomes, MAGs) in our donor samples.  
+The programs we will use are [Metabat](LINK) and [Semibin2](LINK). Both use the differential coverage information and the sequence composition of the contigs as the basis to cluster them into bins.  
 There's also a [´omics vocabulary](https://anvio.org/vocabulary/), that can help you to understand some key terms and concepts in microbial 'omics.  
 
-Allocate computing resources. We'll need 40G of memory, 6 CPUs and 100(G) of temporary storage for at least 4 hours.  
-
-```bash
-# sinteractive
-```
-
-### Contigs database
-
-The first task is to create the contigs database from our assembled contigs. To make things run a bit smoother, we'll first remove all contigs < 2500nt.  
-During the contigs database creation, anvi'o does gene calling with prodigal, calculates the tetranucleotide frequencies for each contigs and splits longer contigs into ~20 000 nt chunks called splits.  
-
-```bash
-mkdir -p 03_ANVIO
-module load anvio/8
-
-anvi-script-reformat-fasta 02_ASSEMBLY/contigs.fasta --min-len 2500 -o 03_ANVIO/contigs2500.fasta
-anvi-gen-contigs-database -f 03_ANVIO/contigs2500.fasta -T 6 -o 03_ANVIO/CONTIGS.db
-```
-
-### Annotation of contigs database
-
-After the contigs database has been created, we'll add only few annotations to the database that aid in the binning process. There are many other commands to add other annotations to the database.  
-`anvi-run-hmms` annotates single-copy core genes and ribosomal RNA's that are used to estimate the completeness and contamination of a bin.  
-`anvi-run-scg-taxonomy` annotates single-copy core genes with taxonomic information.  
-
-```bash
-anvi-run-hmms -c 03_ANVIO/CONTIGS.db -T $SLURM_CPUS_PER_TASK
-anvi-run-scg-taxonomy -c 03_ANVIO/CONTIGS.db -T $SLURM_CPUS_PER_TASK
-```
-
-### Mapping and profiling
+### Mapping
 
 To obtain the differential coverage information for each contig in our database, we will map the original reads from each sample individually to the formatted fasta file (contigs < 2500 nt removed) and make a single profile database from each formatted mappign output file.  
 We used [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) for the mapping and the first step is to create an index of the fasta file.  
 
 ```bash
 mkdir -p 04_MAPPING
-bowtie2-build 03_ANVIO/contigs2500.fasta 04_MAPPING/contigs --threads $SLURM_CPUS_PER_TASK
+bowtie2-build 02_ASSEMBLY/contigs.fasta 04_MAPPING/contigs --threads $SLURM_CPUS_PER_TASK
 ```
 
 As we will be running the same job for all nine samples, the quickest way is to create an array job for the task.  
@@ -360,7 +330,7 @@ Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `sr
 * Change the name of the job and the names of the log files
 * Change the time to 1 hour
 * Change the memory to 12G
-* Instead of metaphlan, load `anvio/8` module
+* Instead of metaphlan, load bowtie2 and samtools modules
 
 Remember that each of the array jobs reads the `DF16_accessions.txt` file and picks the right sample to analyse.  
 In more detail; each array has its own ID from 1–9 stored in the environmental variable `SLURM_ARRAY_TASK_ID`. Each arrays reads the corresponding line from the file and stores it to the variable `SAMPLE_ACC`.  
@@ -375,19 +345,11 @@ bowtie2 \
     -2 01_DATA/${SAMPLE_ACC}_2.fastq.gz \
     --no-unal \
     -p $SLURM_CPUS_PER_TASK \
-    -S $LOCAL_SCRATCH/${SAMPLE_ACC}.sam
+    -S $TMPDIR/${SAMPLE_ACC}.sam
 
-samtools view -bS $LOCAL_SCRATCH/${SAMPLE_ACC}.sam > $LOCAL_SCRATCH/${SAMPLE_ACC}.bam
-
-anvi-init-bam $LOCAL_SCRATCH/${SAMPLE_ACC}.bam -T $SLURM_CPUS_PER_TASK -o 04_MAPPING/${SAMPLE_ACC}.bam
-
-anvi-profile \
-    -i 04_MAPPING/${SAMPLE_ACC}.bam \
-    -c 03_ANVIO/CONTIGS.db \
-    --output-dir 04_MAPPING/${SAMPLE_ACC} \
-    -S ${SAMPLE_ACC} \
-    -T $SLURM_CPUS_PER_TASK \
-    --min-contig-length 5000
+samtools view -bS $TMPDIR/${SAMPLE_ACC}.sam > $TMPDIR/${SAMPLE_ACC}.bam
+samtools sort -o $TMPDIR/${SAMPLE_ACC}.sorted.bam $TMPDIR/${SAMPLE_ACC}.bam
+samtools index $TMPDIR/${SAMPLE_ACC}.sorted.bam
 ```
 
 After the script is ready, you can submit the job(s).  
@@ -396,55 +358,13 @@ After the script is ready, you can submit the job(s).
 sbatch src/mapping.sh
 ```
 
-### Merging the profiles
+### Metabat
 
-When all the mapping jobs have been finished, we can merge all the single profiles into a merged profile database.  
-For this task you will need 40G of memory and about 30 min.  
+INSTRUCTIONS HERE
 
-```bash
-anvi-merge 04_MAPPING/SRR*/PROFILE.db -o 04_MAPPING/MERGED -c 03_ANVIO/CONTIGS.db --enforce-hierarchical-clustering
-```
+### Semibin2
 
-### Interactive use and binning
-
-Now we should have all that we need to visualize our metagenome in anvi'o and start binning. This part is easiest to do with VS Code, but other options are also possible. Except not in Roihu web interface (as far as I know).  
-To be able to tunnel the interactive interface from Roihu to your own computer, everyone will need a separate port.  
-We will allocate the ports in class.  
-
-When you know your port number (`XXXX`), assign it to the environemntal variable `$ANVIO_PORT`.  
-
-```bash
-module load anvio/8
-ANVIO_PORT=XXXX
-```
-
-For the interactive work you will need around 10G of memory and only 1 CPU.  
-
-Then we need to set up the ports in VS Code. We'll go this thru together. If you're using other software for tunneling, figure out how to set the port forwarding there.  
-
-Forward the port in VS Code under PORTS tab as follows: `NODEID.bullx:PORT`  
-
-After the port has been set, you can run the `anvi-interactive` to launch the interactive interface.  
-
-```bash
-anvi-interactive -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT
-```
-
-Other usefull commands we will need during binnning.  
-
-```bash
-anvi-refine -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -P $ANVIO_PORT -C PreCluster -b Bin_1
-
-anvi-rename-bins \
-    -c 03_ANVIO/CONTIGS.db \
-    -p 04_MAPPING/MERGED/PROFILE.db \
-    --collection-to-read PreCluster \
-    --collection-to-write Bins \
-    --prefix DF16 \
-    --report-file 03_ANVIO/Bins_report.txt
-
-anvi-summarize -c 03_ANVIO/CONTIGS.db -p 04_MAPPING/MERGED/PROFILE.db -C Bins -o 03_ANVIO/SUMMARY_Bins
-```
+INSTRUCTIONS HERE
 
 ## MAG QC and taxonomy
 
@@ -523,7 +443,7 @@ export CHECKM2DB="/scratch/project_2022405/DBs/CheckM2_database/uniref100.KO.1.d
     --input 06_GENOMES \
     --output-directory 06_GENOMES/checkm2 \
     --extension fa \
-    --tmpdir $LOCAL_SCRATCH \
+    --tmpdir $TMPDIR \
     --threads $SLURM_CPUS_PER_TASK
 ```
 
@@ -539,8 +459,8 @@ export GTDBTK_DATA_PATH="/scratch/project_2022405/DBs/release226/"
     --skip_ani_screen \
     --cpus $SLURM_CPUS_PER_TASK \
     --pplacer_cpus 1 \
-    --scratch_dir $LOCAL_SCRATCH \
-    --tmpdir $LOCAL_SCRATCH
+    --scratch_dir $TMPDIR \
+    --tmpdir $TMPDIR
 ```
 
 ## MAG annotation
@@ -794,7 +714,7 @@ Also make sure to run this from our course main folder (MMB-901_Metagenomics) so
     --input-fasta 03_ANVIO/contigs2500.fasta \
     --input-bam 04_MAPPING/SRR11941565.bam \
     --environment human_gut \
-    --tmpdir $LOCAL_SCRATCH \
+    --tmpdir $TMPDIR \
     --threads $SLURM_CPUS_PER_TASK \
     --output 08_AUTOMATED_BINNING
 ```

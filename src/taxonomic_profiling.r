@@ -1,5 +1,5 @@
 ## Some setup for R packages needed for the analysis
-.libPaths(c("/projappl/project_2016640/project_rpackages_r451", .libPaths()))
+.libPaths(c("/projappl/project_2022405/project_rpackages_r451", .libPaths()))
 
 # Load required libraries
 library(tidyverse)
