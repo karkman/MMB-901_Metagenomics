@@ -31,21 +31,21 @@ __Recommended prerequisites:__
 
 ## Schedule
 
-The course will be from Monday 24th of November to Friday 12th of December at Viikki Campus.
+The course will be from Monday 23rd of November to Friday 11th of December at Viikki Campus.
 
 __Practicals:__
   
 | Day | Time | Building | Class room |  
 | --- | --- | --- | :---: |  
-| Monday 24.11.    | 10-16   | :office: Infocenter | __K1087__   |
-| Wednesday 26.11.  | 10-16   | :office: Infocenter | __K1087__  |
-| Friday 27.11.| 10-16   | :office: Infocenter | __K1048__  |
-| Monday 1.12.  | 10-16   | :office: Infocenter | __K1087__  |
-| Wednesday 3.12.   | 10-16   | :office: Infocenter | __K1087__  |
-| Friday 5.12.   | 10-16   | :office: Infocenter | __K1048__  |
-| Monday 8.12.   | 10-16   | :office: Infocenter | __K1087__  |
-| Wednesday 10.12.   | 10-16   | :office: Infocenter | __K1087__  |
-| Friday 12.12.   | 10-16   | :office: Infocenter | __K1048__  |
+| Monday 23.11.    | 10-16   | :office: Biocenter 3 | __1402__   |
+| Wednesday 25.11.  | 10-16   | :office: Biocenter 3 | __1402__  |
+| Friday 27.11.| 10-16   | :office: Forest Science building | __107 (B4)__  |
+| Monday 30.11.  | 10-16   | :office: Biocenter 3 | __1402__  |
+| Wednesday 2.12.   | 10-16   | :office: Biocenter 3 | __1402__  |
+| Friday 4.12.   | 10-16   | :office: Forest Science building | __107 (B4)__  |
+| Monday 7.12.   | 10-16   | :office: Biocenter 3 | __1402__  |
+| Wednesday 9.12.   | 10-16   | :office: Biocenter 3 | __1402__  |
+| Friday 11.12.   | 10-16   | :office: Forest Science building | __107 (B4)__  |
 
 </table>  
 
@@ -68,5 +68,5 @@ By completing this course, you will:
 
 ## Organizers and teachers
 
-:man_technologist: Antti Karkman, University of Helsinki  
 :woman_technologist: Katariina Pärnänen,  University of Helsinki  
+:man_technologist: Antti Karkman, University of Helsinki  

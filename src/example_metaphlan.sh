@@ -11,7 +11,8 @@
 #SBATCH --array=1-9
 #SBATCH --gres=nvme:100
 
-module load metaphlan/4.2.4
+module load bio-apps/v202603
+module load py-metaphlan/4.2.4
 mkdir -p 00_LOGS
 mkdir -p 05_TAXONOMY
 
@@ -22,6 +23,5 @@ metaphlan \
     --nproc $SLURM_CPUS_PER_TASK \
     --sample_id ${SAMPLE_ACC} \
     --input_type fastq \
-    --db_dir /scratch/project_XXXXXXX/DBs/metaphlan \
     --output 05_TAXONOMY/${SAMPLE_ACC}.txt \
     --mapout 05_TAXONOMY/${SAMPLE_ACC}.bowtie2.bz2 
