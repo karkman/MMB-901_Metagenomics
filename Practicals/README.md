@@ -394,8 +394,8 @@ SemiBin2 single_easy_bin \
 The outputs from Semibin2 will be written to `05_BINNING/SEMIBIN2/` and the folder will contain information about the bins, some log files and one folder with all the genome bins as compressed fasta files.  
 
 NOT SURE ABOUT THIS, COULD SOMEONE CHECK?  
-Semibin2 produces a file (`contig_bins.tsv`) that has all the needed information, but the format is not exactly as anvi'o would wish.
-So we need to do some command line magic. Or in other words use `awk` to remove the first line and add a prefix to each bin name (as anvi'o does not accept only numbers as bin names).
+Semibin2 produces a file (`contig_bins.tsv`) that has all the needed information.
+So we need to do some command line magic. Or in other words use `awk` to remove the first line and add a prefix to each bin name.
 
 ```bash
 awk 'NR!=1 {print $1"\tSemibin2_"$2}' 08_AUTOMATED_BINNING/contig_bins.tsv > 08_AUTOMATED_BINNING/semibin_collection.txt
