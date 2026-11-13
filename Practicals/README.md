@@ -363,10 +363,81 @@ sbatch src/mapping.sh
 
 ### Metabat
 
-INSTRUCTIONS HERE
+MetaBAT2 is an automated metagenomic binning tool that groups assembled contigs into metagenome-assembled genomes (MAGs). It uses sequence composition (tetranucleotide frequencies) and contig abundance (coverage) to identify groups of contigs that likely originate from the same microorganism. Unlike SemiBin2, MetaBAT2 does not use deep learning or require model training. It is relatively straightforward and computationally efficient, making it a suitable alternative for our purposes.
 
+We will use the assembly files and mapped reads created in the previous step. MetaBAT2 requires the assembled contigs in FASTA format and a contig-depth file generated from sorted BAM files. The depth file can be generated using jgi_summarize_bam_contig_depths, which is included with MetaBAT2.
+
+We will run MetaBAT2 separately for all nine samples using batch jobs on Roihu. The resulting genome bins can then be compared with the bins obtained using SemiBin2 (below).The job will use 8 CPUs and 32 GB of memory, with an initial time allocation of 4 hours. The actual runtime will depend on the size of the assemblies and sequencing data.
+
+Create a folder for MetaBAT2 binning: 
 ```bash
 05_BINNING/METABAT2/
+```
+
+To run MetaBAT2, we need three files:
+1. Assembled contigs (.fa / .fasta) providing sequences to be grouped into MAGs
+2. Sorted bam files (.bam)
+3. Depth file (.txt), will be created in the script
+
+Since we did a co-assembly, we use all nine BAM files together in one MetaBAT2 run for the binning. Create a bash script in your METABAT directory. Run with sbatch and consider using tmux. 
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=metabat2
+#SBATCH --account=YOUR_PROJECT
+#SBATCH --partition=small
+#SBATCH --time=04:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=32G
+#SBATCH --output=metabat2_%j.out
+#SBATCH --error=metabat2_%j.err
+
+# Load MetaBAT2
+module load bio-apps/v202603
+module load metabat/2.15
+
+# Input and output directories
+CONTIGS="PATH_TO_CONTIG_FILE" 
+BAM_DIR="PATH_TO_BAM_DIR" 
+OUT_DIR="/METABAT2_OUT" #DO NOT EDIT
+
+mkdir -p "$OUT_DIR"
+
+# List all nine sorted BAM files
+BAMS=(
+    "$BAM_DIR/SAMPLE1.sorted.bam"
+    "$BAM_DIR/SAMPLE2.sorted.bam"
+    "$BAM_DIR/SAMPLE3.sorted.bam"
+    "$BAM_DIR/SAMPLE4.sorted.bam"
+    "$BAM_DIR/SAMPLE5.sorted.bam"
+    "$BAM_DIR/SAMPLE6.sorted.bam"
+    "$BAM_DIR/SAMPLE7.sorted.bam"
+    "$BAM_DIR/SAMPLE8.sorted.bam"
+    "$BAM_DIR/SAMPLE9.sorted.bam"
+)
+
+# Check input files
+for bam in "${BAMS[@]}"; do
+    [[ -s "$bam" ]] || { echo "Missing BAM: $bam"; exit 1; }
+done
+
+[[ -s "$CONTIGS" ]] || { echo "Missing contigs FASTA"; exit 1; }
+
+# Generate contig depth file
+jgi_summarize_bam_contig_depths \
+    --outputDepth "$OUT_DIR/depth.txt" \
+    "${BAMS[@]}"
+
+# Run MetaBAT2
+metabat2 \
+    -i "$CONTIGS" \
+    -a "$OUT_DIR/depth.txt" \
+    -o "$OUT_DIR/bin" \
+    -t "$SLURM_CPUS_PER_TASK"
+
+echo "MetaBAT2 finished"
 ```
 
 ### Semibin2
