@@ -57,7 +57,7 @@
 | 10-11 | Viral metagenomics intro | XXX |
 | 11-12 | Viral metagenomics / Strain engraftment cont'd | XXX |
 | 12-13 | Lunch break | :plate_with_cutlery: |
-| 13-15 | Viral metagenomics | [Instructions](README.md#phage-part) |
+| 13-15 | Viral metagenomics | [Instructions](README.md#viral-metagenomics) |
 | 15-16 | Self-assesment | In Moodle |
 
 ## Week 3
