@@ -627,7 +627,8 @@ done > 07_PHAGES/all_hq_bins.fna
 We now have a single FASTA file as input for geNomad, while retaining the original bin assignment information in the contig headers. You can check the names of the first 10 contigs using:
 
 ```bash
-grep '^>' 07_PHAGES/all_hq_bins.fna 
+grep '^>' 07_PHAGES/all_hq_bins.fna | head -10
+
 ```
 
 Write a batch job script to run geNomad following the script below.
@@ -752,10 +753,16 @@ Check the options you used with `checkv -h` and `checkv end_to_end -h`.
 
 Explore the output, especially the summary file quality._summary.tsv:
 
-* Are there any proviruses predicted? Are those contigs that were flagged as proviruses by geNomad now also flagged as proviruses by CheckV? Any new proviruses compared to geNomad predictions?*
+* How many proviruses are predicted? Are those contigs that were flagged as proviruses by geNomad now also flagged as proviruses by CheckV? Any new proviruses compared to geNomad predictions?*
+
+You can count proviral contigs from the `provirus.fna` created by CheckV:
+```bash
+grep -c "^>" path-to/proviruses.fna
+```
+
+*We used the geNomad `.fna` output as input for CheckV. However, geNomad has already excised the identified proviral sequences from their host-derived flanking regions and renamed the contigs to include provirus coordinates (e.g. `contig_1480|provirus_18530_57545`). Since the host-derived regions have already been removed, CheckV may not recognize some sequences as proviruses. In other cases, it may recommend further trimming or identify additional proviruses that geNomad did not detect. CheckV produces a proviruses.fna file containing sequences trimmed according to its recommendations, with updated contig headers and coordinates (e.g. `NODE_1301_length_66349_cov_37.879129_1 3260-66349/66349`). For more accurate proviral length, gene count, viral gene and host gene estimates, this file should be used as input for a second CheckV run. Although CheckV may recommend further trimming, running it more than twice is generally not standard practice.
+
 * Are most contigs of low, medium or high quality? See how the quality corresponds to completeness.
-* Are there any 100% complete viral genomes listed?
-* Any warnings?
 
 Check for proportions of quality predictions (you can ask AI to explain command):
 
@@ -768,8 +775,8 @@ END {
 }' path-to/quality_summary.tsv
 ```
 
-*We used the geNomad `.fna` output as input for CheckV. However, geNomad has already excised the identified proviral sequences from their host-derived flanking regions and renamed the contigs to include provirus coordinates (e.g. `contig_1480|provirus_18530_57545`). Since the host-derived regions have already been removed, CheckV may not recognize some sequences as proviruses. In other cases, it may recommend further trimming or identify additional proviruses that geNomad did not detect. CheckV produces a proviruses.fna file containing sequences trimmed according to its recommendations, with updated contig headers and coordinates (e.g. `NODE_1301_length_66349_cov_37.879129_1 3260-66349/66349`). For more accurate proviral length, gene count, viral gene and host gene estimates, this file should be used as input for a second CheckV run. Although CheckV may recommend further trimming, running it more than twice is generally not standard practice.
-
+* Are there any 100% complete viral genomes listed?
+* Any warnings?
 
 In a real project, __CheckV output is typically used for filtering__ some predictions out. Generally, high- (>90% completeness) and medium-confidence (50-90% completeness) estimates are quite accurate. Common thresholds for metagenomic viral contigs include:
 * at least 1 virus gene identified by CheckV;
