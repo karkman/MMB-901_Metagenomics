@@ -16,5 +16,5 @@ mkdir -p 04_MAPPING
 
 bowtie2-build \
     --threads $SLURM_CPUS_PER_TASK \
-    02_ASSEMBLY/DF16/contigs.fasta \
-    04_MAPPING/DF16_contigs
+    02_ASSEMBLY/contigs.fasta \
+    04_MAPPING/contigs

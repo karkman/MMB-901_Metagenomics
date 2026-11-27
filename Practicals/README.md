@@ -356,7 +356,7 @@ As we will be running the same job for all nine samples, the quickest way is to 
 Copy the `metaphlan.sh` script to a new file called `mapping.sh` in the same `src` folder and modify it accordingly:
 
 * Change the name of the job and the names of the log files
-* Change the time to 35 minutes
+* Change the time to 50 minutes
 * Change the memory to 12G
 * Instead of metaphlan, load bowtie2 and samtools modules
 
@@ -367,6 +367,11 @@ Make sure the path to the accession file is correct in the following line: `SAMP
 __Do not run__ the following, but these are the mapping and profiling commands that you need to change in the file:  
 
 ```bash
+mkdir -p 04_MAPPING
+module load bio-apps/v202603
+module load bowtie2/2.5.4
+module load samtools/1.24
+
 bowtie2 \
     -x 04_MAPPING/contigs \
     -1 01_DATA/${SAMPLE_ACC}_1.fastq.gz \
@@ -402,7 +407,7 @@ Create a folder for MetaBAT2 binning:
 
 To run MetaBAT2, we need three files:
 
-1. Assembled contigs (.fa / .fasta) to be grouped into MAGs
+1. Assembled (filtered) contigs (.fa / .fasta) to be grouped into MAGs
 2. Sorted bam files (.bam)
 3. Depth file (.txt) which will be created in the script
 
@@ -413,7 +418,7 @@ To run MetaBAT2, we need three files:
 #SBATCH --job-name=metabat2
 #SBATCH --account=YOUR_PROJECT
 #SBATCH --partition=small
-#SBATCH --time=00:20:00
+#SBATCH --time=00:30:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -428,7 +433,7 @@ module load metabat/2.15
 # Input and output directories
 CONTIGS="PATH_TO_FILTERED_CONTIG_FILE"
 BAM_DIR="PATH_TO_BAM_DIR"
-OUT_DIR="05_BINNIG/METABAT2_OUT"
+OUT_DIR="05_BINNING/METABAT2_OUT"
 
 mkdir -p "$OUT_DIR"
 
@@ -461,7 +466,7 @@ sbatch src/metabat2.sh
 
 Semibin2 uses deep learning in metagenomic binning and has pre-trained models for several different environments, including human gut. However, with multiple samples the pre-trained models cannot be used and we would need to train the model with our data. The model training takes some time, although it might be more accurate. Running Semibin2 with pre-trained model is a lot faster and but will prefer accuracy over speed on this course and use the differential coverage information from the nine samples to train the model.  
 
-We will use the same files as with Metabat. The job can be run interactively or as a batch job. You will need at least 8 CPUs, 60 GB of memory, and 3 h.
+We will use the same files as with Metabat. The job needs to be run as a batch job. You will need at least 8 CPUs, 60 GB of memory, and 3 h.
 Allocate the resources or write a batch job script and use the following command to run Semibin2.  
 
 Also make sure to run this from our course main folder (MMB-901_Metagenomics) so that all the paths are right.  
@@ -590,11 +595,190 @@ gtdbtk classify_wf \
 
 ## Viral metagenomics
 
-INSTRUCTIONS HERE
+Prophages replicate with their host, so if a donor strain engrafts, its prophage genes arrive in the recipient gut with it. Some phage-encoded genes have bacterial rather than viral functions and are commonly called auxiliary metabolic genes (AMGs).
+
+__Question:__ which donor prophages carry putative AMGs, in what functional categories, and does this differ between strains that engraft and those that do not?
+
+In this exercise you will predict prophages in donor MAGs, annotate their genes, and shortlist candidates. Keep in mind that annotation is incomplete, so absence means little, and that presence is a hypothesis about host fitness rather than evidence.
+
+Make a directory for all virus analyses in your own directory:
+```bash
+mkdir 07_PHAGES
+```
+
+### Viral contig identification with geNomad
+
+There are many different tools for predicting viral contigs from metagenomes. In this course, we will use [geNomad](https://github.com/apcamargo/genomad), which can identify viral and proviral sequences, and is a commonly used tool in viral metagenomics. 
+
+__How does geNomad identify viral sequences?__
+Check from the publication [Camargo, A.P., Roux, S., Schulz, F. et al. Identification of mobile genetic elements with geNomad. Nat Biotechnol 42, 1303–1312 (2024)](https://www.nature.com/articles/s41587-023-01953-y) 
+
+Good documentation also [here](https://portal.nersc.gov/genomad/pipeline.html)
+
+We will run geNomad on the high-quality bins to identify putative proviral sequences. Since geNomad generates a separate output directory for each input FASTA file, we will first concatenate all bin FASTA files into a single file to obtain a unified output. To preserve information about the original bin assignments, we will add a bin-specific prefix to each contig header before combining the files. (This can be run in the login node.)
 
 ```bash
-07_PHAGES
+for fasta in /path-to-high-quality-bins/*.fa; do
+  bin=$(basename "$fasta" .fa)
+  sed "s/^>/>${bin}__/" "$fasta"
+done > 07_PHAGES/all_hq_bins.fna
 ```
+
+We now have a single FASTA file as input for geNomad, while retaining the original bin assignment information in the contig headers. You can check the names of the first 10 contigs using:
+
+```bash
+grep '^>' 07_PHAGES/all_hq_bins.fna 
+```
+
+Write a batch job script to run geNomad following the script below.
+
+Note that geNomad is not available in Roihu modules so we have installed the software for you. Therefore you need to call the tool from project applications with:
+
+```bash
+export PATH="/projappl/project_2022405/genomad-1.13.0/bin:$PATH"
+```
+
+Genomad creates a lot intermediate files, so we need 100G [flash storage](https://docs.csc.fi/supercomputing/disk/#temporary-local-disk-areas) and a cleanup step in the command. geNomad searches a big database of protein profiles which takes up a lot of memory. We can split the search into chunks using the `--splits` parameter to prevent the execution form failing due to insufficient memory.
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=genomad
+#SBATCH --output=00_LOGS/%x-%j.out
+#SBATCH --error=00_LOGS/%x-%j.err
+#SBATCH --time=1:30:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=10G
+#SBATCH --account=project_project_2022405
+#SBATCH --bb="#BB_LUA SBF storagesize=100G path=/sbf/data"
+
+export PATH="/projappl/project_2022405/genomad-1.13.0/bin:$PATH"
+DB=/scratch/project_2022405/DATABASES/genomad_db-1.9
+
+# Add MAGs fasta here
+MAGS="07_PHAGES/hq_bins.fna"
+
+OUTDIR="07_PHAGES/GENOMAD"
+mkdir -p "$OUTDIR"
+
+genomad end-to-end \
+    --cleanup \
+    --splits 16 \
+    --threads "$SLURM_CPUS_PER_TASK" \
+    "$MAGS" \
+    "$OUTDIR" \
+    "$DB"
+```
+Check the used options (and others) by `genomad -h` and `genomad end-to-end -h`. (Run `export PATH="/projappl/project_2022405/genomad-1.13.0/bin:$PATH"` before running the command)
+
+* What does end-to-end mode do?
+* What kind of information can you expect as an output?
+
+#### geNomad output 
+
+Explore the output. Have a look at the log files first:
+
+* What steps did geNomad run?
+* How many viral contigs were identified in the high-quality MAGs? What about plasmids?
+
+You can look at output with:
+
+```bash
+Less -S file.tsv 	#-S disables line wrapping)
+```
+Press `q` to quit
+
+OR
+
+```bash
+Nano file.tsv 
+```
+
+Count predictions in *virus_summary.tsv output:
+```bash
+tail -n +2 file.tsv | wc -l
+```
+
+Find summary table, where viral contigs are listed:
+* What viral taxa were predicted?
+* What length do viral contigs have?
+* Are there proviruses predicted?
+
+### Quality control with CheckV
+
+We will assess the quality and completeness of viral contigs identified by geNomad with [CheckV](https://bitbucket.org/berkeleylab/checkv/src/master/). 
+
+* How does CheckV predict the quality? 
+Check from the publication [Nayfach, S., Camargo, A.P., Schulz, F. et al. CheckV assesses the quality and completeness of metagenome-assembled viral genomes. Nat Biotechnol 39, 578–585 (2021)](https://www.nature.com/articles/s41587-020-00774-7)
+
+Note that CheckV needs its database, which is already downloaded to `/scratch/project_2022405/DATABASES/`
+
+Run CheckV interactively or using a batch script following the script below.
+
+You need: 8G memory and 8 CPU. Running CheckV will only take a few minutes.
+
+```bash
+#!/bin/bash
+#SBATCH --job-name=checkv
+#SBATCH --output=00_LOGS/%x-%j.out
+#SBATCH --error=00_LOGS/%x-%j.err
+#SBATCH --time=00:30:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8GB
+#SBATCH --account=project_project_2022405
+
+export PATH="/projappl/project_2022405/checkVv1.1.1/bin:$PATH"
+DB=/scratch/project_2022405/DATABASES/checkv-db-v1.5
+
+# Add geNomad virus.fna here
+VIRAL_CONTIGS="07_PHAGES/GENOMAD..."
+
+OUTDIR="07_PHAGES/CHECKV"
+mkdir -p "$OUTDIR"
+
+checkv end_to_end \
+    "$VIRAL_CONTIGS" \
+    "$OUTDIR" \
+    -d "$DB" \
+    -t "$SLURM_CPUS_PER_TASK"
+```
+
+Check the options you used with `checkv -h` and `checkv end_to_end -h`.
+
+#### CheckV output
+
+Explore the output, especially the summary file quality._summary.tsv:
+
+* Are there any proviruses predicted? Are those contigs that were flagged as proviruses by geNomad now also flagged as proviruses by CheckV? Any new proviruses compared to geNomad predictions?*
+* Are most contigs of low, medium or high quality? See how the quality corresponds to completeness.
+* Are there any 100% complete viral genomes listed?
+* Any warnings?
+
+Check for proportions of quality predictions (you can ask AI to explain command):
+
+```bash
+awk -F'\t' 'NR>1 && $8!="" {count[$8]++; total++}
+END {
+    print "Quality\tCount\tPercentage"
+    for (tier in count)
+        printf "%s\t%d\t%.2f%%\n", tier, count[tier], 100*count[tier]/total
+}' path-to/quality_summary.tsv
+```
+
+*We used the geNomad `.fna` output as input for CheckV. However, geNomad has already excised the identified proviral sequences from their host-derived flanking regions and renamed the contigs to include provirus coordinates (e.g. `contig_1480|provirus_18530_57545`). Since the host-derived regions have already been removed, CheckV may not recognize some sequences as proviruses. In other cases, it may recommend further trimming or identify additional proviruses that geNomad did not detect. CheckV produces a proviruses.fna file containing sequences trimmed according to its recommendations, with updated contig headers and coordinates (e.g. `NODE_1301_length_66349_cov_37.879129_1 3260-66349/66349`). For more accurate proviral length, gene count, viral gene and host gene estimates, this file should be used as input for a second CheckV run. Although CheckV may recommend further trimming, running it more than twice is generally not standard practice.
+
+
+In a real project, __CheckV output is typically used for filtering__ some predictions out. Generally, high- (>90% completeness) and medium-confidence (50-90% completeness) estimates are quite accurate. Common thresholds for metagenomic viral contigs include:
+* at least 1 virus gene identified by CheckV;
+* host to virus gene count ratio no more than 1:1;
+* length minimum of 5 kbp or 10 kbp, unless a genome is >=50% complete (but not shorter than 1 kbp anyway).
+
+
+In this course, we won't filter any viral contigs to keep things simple enough.
+
 
 ## Strain engraftment with inStrain
 
