@@ -780,6 +780,48 @@ In a real project, __CheckV output is typically used for filtering__ some predic
 In this course, we won't filter any viral contigs to keep things simple enough.
 
 
+### DefenseFinder
+
+Now we can screen proviral sequences for anti-phage system genes using [DefenseFinder](https://github.com/mdmparis/defense-finder). 
+
+
+Run DefenseFinder interactively (4CPU, 8G and 30 min). Remember to call `export `PATH="/projappl/project_2022405/defense-finder-3.0.0/bin:$PATH"`.
+
+Check out the tool's documentation on GitHub and then run:
+
+```bash
+defense-finder run -o 07_PHAGES/DEFENSE_FINDER path-to/CHECKV/proviruses.fna
+```
+
+#### DefenseFinder output
+
+Explore the `proviruses_defense_finder_genes.tsv` file.
+
+
+* What type of anti-phage system genes did you find? You can look for their definitions in [DefenseFinder Wiki](https://defensefinder.mdmlab.fr/wiki/).
+
+You can run the following to check the `gene_name` column from the file:
+
+```bash
+cut -f3 07_PHAGES/DEFENSE_FINDER/proviruses_defense_finder_genes.tsv 
+```
+
+
+These hits come from prophages predicted in bacterial bins, so every gene has an identifiable host genome. Trace back the taxonomy of bins with hits now. 
+
+Keep in mind that the tools we used have modified the contig names in some steps (i.e. geNomad & CheckV)
+
+Print out the (unique) contig names with hits:
+
+```bash
+tail -n +2 07_PHAGES/DEFENSE_FINDER/proviruses_defense_finder_genes.tsv | cut -f1 | sort -u
+```
+Trace back their taxonomy from the GTDB-Tk output.
+
+
+`-->` When you later determine which strains engrafted, compare the lists and ask whether prophage-encoded genes could have contributed.
+
+
 ## Strain engraftment with inStrain
 
 The next step is to determine the strain engraftment of the donor MAGs to few selected recipients.  
