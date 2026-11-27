@@ -71,5 +71,10 @@ By completing this course, you will:
 
 ## Organizers and teachers
 
-:woman_technologist: Katariina Pärnänen,  University of Helsinki  
-:man_technologist: Antti Karkman, University of Helsinki  
+:woman_technologist: Katariina Pärnänen  
+:woman_technologist: Lilli Rasila  
+:woman_technologist: Saana Karhula  
+:woman_technologist: Sanni Haahti  
+:woman_technologist: Yasmine Eddoubaji  
+:man_technologist: Kim Kreuze  
+:man_technologist: Antti Karkman
