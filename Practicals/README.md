@@ -595,9 +595,9 @@ gtdbtk classify_wf \
 
 ## Viral metagenomics
 
-Prophages replicate with their host, so if a donor strain engrafts, its prophage genes arrive in the recipient gut with it. Some phage-encoded genes have bacterial rather than viral functions and are commonly called auxiliary metabolic genes (AMGs).
+Prophages replicate with their host, so if a donor strain engrafts, its prophage genes arrive in the recipient gut with it. Some phage-encoded genes benefit the host bacterium, and in doing so the prophage itself. Anti-phage immunity genes are a clear case: carried within a prophage, they shield the host from other phages, and therefore the prophage from rivals.
 
-__Question:__ which donor prophages carry putative AMGs, in what functional categories, and does this differ between strains that engraft and those that do not?
+__Research question:__ which donor prophages carry putative anti-phage system genes, and can we find them in the engrafting bacterial strains?
 
 In this exercise you will predict prophages in donor MAGs, annotate their genes, and shortlist candidates. Keep in mind that annotation is incomplete, so absence means little, and that presence is a hypothesis about host fitness rather than evidence.
 
@@ -632,13 +632,13 @@ grep '^>' 07_PHAGES/all_hq_bins.fna
 
 Write a batch job script to run geNomad following the script below.
 
-Note that geNomad is not available in Roihu modules so we have installed the software for you. Therefore you need to call the tool from project applications with:
+Note that geNomad is not available in Roihu modules so we have installed the software for you. Therefore you need to __call the tool from the project applications__ with:
 
 ```bash
 export PATH="/projappl/project_2022405/genomad-1.13.0/bin:$PATH"
 ```
 
-Genomad creates a lot intermediate files, so we need 100G [flash storage](https://docs.csc.fi/supercomputing/disk/#temporary-local-disk-areas) and a cleanup step in the command. geNomad searches a big database of protein profiles which takes up a lot of memory. We can split the search into chunks using the `--splits` parameter to prevent the execution form failing due to insufficient memory.
+geNomad creates a lot intermediate files, so we need 100G [flash storage](https://docs.csc.fi/supercomputing/disk/#temporary-local-disk-areas) and a cleanup step in the command. geNomad searches a big database of protein profiles which takes up a lot of memory. We can split the search into chunks using the `--splits` parameter to prevent the execution form failing due to insufficient memory.
 
 ```bash
 #!/bin/bash
@@ -685,15 +685,11 @@ Explore the output. Have a look at the log files first:
 You can look at output with:
 
 ```bash
-Less -S file.tsv 	#-S disables line wrapping)
+less -S file.tsv 	#-S disables line wrapping
 ```
 Press `q` to quit
 
-OR
-
-```bash
-Nano file.tsv 
-```
+OR with `nano`.
 
 Count predictions in *virus_summary.tsv output:
 ```bash
