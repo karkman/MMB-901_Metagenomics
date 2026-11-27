@@ -71,10 +71,16 @@ By completing this course, you will:
 
 ## Organizers and teachers
 
+### Responsible teachers
+
 :woman_technologist: Katariina Pärnänen  
+:man_technologist: Antti Karkman
+
+### Contributors, assistants and other remarkable people
+
 :woman_technologist: Lilli Rasila  
 :woman_technologist: Saana Karhula  
 :woman_technologist: Sanni Haahti  
 :woman_technologist: Yasmine Eddoubaji  
 :man_technologist: Kim Kreuze  
-:man_technologist: Antti Karkman
+
